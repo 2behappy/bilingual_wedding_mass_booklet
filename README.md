@@ -12,7 +12,7 @@ The parallel-text typesetting was performed by using :
 
 Note 1: the booklet here attached is the final version used for a catholic wedding Mass, and the content of the booklet (the italian part) was reviewed by a minister of the italian Roman Catholic Church.
 
-Note 2: Since the three main packages used here, i.e. matrita, reledpar and reledmac were not designed to work together, a number of workarounds has been applied here to create a harmonious and working manuscript (in particular, to set up the vertical spaces all around the text - that part was challenging). 
+Note 2: Since the three main packages used here, i.e. matrita, reledpar and reledmac were not designed to work together, a number of workarounds has been applied to create a harmonious and working manuscript (in particular, to set up the vertical spaces all around the text - that part was challenging). 
 
 # bilingual_wedding_mass_booklet: how to use it
 
