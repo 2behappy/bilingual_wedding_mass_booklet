@@ -1,0 +1,665 @@
+\documentclass[11pt,a4paper]{book}
+
+% reledpar and reledmac packages
+% https://tug.org/texlive/devsrc/Master/texmf-dist/tex/latex/reledmac/
+\usepackage{reledmac}
+\usepackage{reledpar}
+\numberlinefalse  
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+
+% \usepackage{fontspec}
+\usepackage{adforn}
+\usepackage{fontawesome5}
+\usepackage{twemojis}
+
+%  \usepackage[sc]{mathpazo}
+ \usepackage{gfsartemisia}
+ \linespread{1.05}
+
+
+\usepackage[paperwidth=120mm,paperheight=210mm,top=12mm,bottom=12mm,outer=20mm,inner=13mm,foot=0mm]{geometry}
+
+
+\usepackage[]{matrita_bilingual}
+\usepackage{indentfirst}
+\usepackage{xcoffins}
+\usepackage{microtype}
+\usepackage{lipsum}
+\usepackage{xcolor}
+\usepackage{xstring}
+\usepackage{expl3}
+\usepackage{textcase}
+\usepackage{graphicx}
+\usepackage{lettrine}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhead{} % clear all header fields
+\fancyfoot{} % clear all footer fields
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+
+\fancyfoot[C]{\thepage}
+
+\renewcommand{\respfont}{\bfseries}
+\setlength{\parindent}{0pt}
+
+
+\definecolor{respcolor}{HTML}{046a38} % COLOR RESPONSE
+\definecolor{etgray}{gray}{0.8}
+\setlength{\afterpoemtitleskip}{2ex plus 0ex minus 1ex}
+\setlength{\beforepoemtitleskip}{2.5ex plus 1ex minus 2ex}
+\setlength{\leftmargini}{0em}
+\setlength{\titleindent}{0em}
+
+\renewcommand{\poemtitlefont}{\normalfont\large\bfseries}
+\definecolor{crosscolor}{HTML}{046a38} % COLOR OF THE CROSS GOSPEL = COLOR RESPONSE
+\definecolor{SAGEcolor}{HTML}{82A279} % {AEC1A9} % COLOR SAGE / SALVIA
+\renewcommand{\intestfont}[1]{{\Large\scshape\textcolor{SAGEcolor}{#1}}} % COLOR SMALL TITLES
+\renewcommand{\nomelibrofont}[1]{{\bfseries#1}}
+\ExplSyntaxOn
+\NewCoffin\InitialCoffin
+\NewCoffin\RestCoffin
+\NewCoffin\LineCoffin
+\newlength{\InitKernCorr}
+\tl_new:N \Part_Title_tl
+\tl_new:N \Rest_of_Title_tl
+\tl_set:Nn \First_Title_tl {\tl_head:N \Part_Title_tl}
+\tl_set:Nn \Rest_of_Title_tl {\tl_tail:N \Part_Title_tl}
+\RenewDocumentCommand {\momento}{O{0em}m}{
+  \tl_set:Nn \Part_Title_tl {#2}
+  \setlength{\InitKernCorr}{#1}
+  \SetHorizontalCoffin\InitialCoffin{
+    \normalfont\scalebox{2}{\Large\textcolor{respcolor}{\First_Title_tl}\hspace{\InitKernCorr}} % COLOR BIG TITLES
+  }
+  \SetHorizontalCoffin\RestCoffin{
+    \normalfont\Large\textcolor{respcolor}{\MakeTextUppercase	\Rest_of_Title_tl} % COLOR BIG TITLES
+  }
+  \SetHorizontalCoffin\LineCoffin{
+    \textcolor{SAGEcolor}{\rule[-1.5pt]{\dimexpr\textwidth-\CoffinWidth\InitialCoffin\relax}{0.6pt}}
+  }
+  \JoinCoffins\LineCoffin[l,t]\RestCoffin[l,b]
+  \JoinCoffins\LineCoffin[l,b]\InitialCoffin[r,b]
+  \par\vspace*{5\baselineskip}\noindent\TypesetCoffin\LineCoffin (0mm, 0mm)\vspace{3\baselineskip}
+}
+\ExplSyntaxOff
+\newcommand{\sottomomento}[1]{{\intestfont{#1}}\par\medskip}
+
+
+
+
+\makeatletter
+\patchcmd{\mtr@segnocroce}{voi.}{voi.\\}{}{} % for \segnocroce
+\patchcmd{\mtr@segnocroce}{\rispostatutti{Amen.}}{\rispostatutti{Amen.\\}}{}{} % for \segnocroce
+\patchcmd{\mtr@introi}{chiamati.}{chiamati.\\}{}{} % for \introduzione
+\patchcmd{\mtr@baptmem}{popolo.}{popolo.\\}{}{} % for \membatt
+\patchcmd{\mtr@baptmem}{sposa.}{sposa.\\}{}{} % for \membatt
+\patchcmd{\mtr@baptmem}{Chiesa.}{Chiesa.\\}{}{} % for \membatt
+\patchcmd{\mtr@baptmem}{\rispostatutti{Noi ti lodiamo e ti rendiamo grazie.}}{\rispostatutti{Noi ti lodiamo e ti rendiamo grazie.\\}}{}{} % for \membatt
+\patchcmd{\mtr@baptmem}{\rispostatutti{Noi ti lodiamo e ti rendiamo grazie.}}{\rispostatutti{Noi ti lodiamo e ti rendiamo grazie.\\}}{}{} % for \membatt
+\patchcmd{\mtr@baptmem}{\rispostatutti{Noi ti lodiamo e ti rendiamo grazie.}}{\rispostatutti{Noi ti lodiamo e ti rendiamo grazie.\\}}{}{} % for \membatt
+\patchcmd{\mtr@baptmem}{santificazione.}{santificazione.\\}{}{} % for \membatt
+\patchcmd{\mtr@gloria}{di Dio Padre.}{di Dio Padre.\\ \\}{}{} % for \gloria
+\patchcmd{\mtr@collettai}{secoli.}{secoli.\\ \\}{}{} % for \colletta
+\patchcmd{\mtr@matrintroi}{intenzioni.}{intenzioni.\\ \\}{}{} % for \matrintro
+\patchcmd{\mtr@matrprei}{decisione?}{decisione?\\}{}{} % for \matrpre
+\patchcmd{\mtr@matrprei}{vita?}{vita?\\}{}{} % for \matrpre
+\patchcmd{\mtr@matrprei}{Chiesa?}{Chiesa?\\}{}{} % for \matrpre
+\patchcmd{\mtr@consintroi}{consenso.}{consenso.\\}{}{} % for \consintro
+\patchcmd{\mtr@matri}{vita.}{vita.\\}{}{} % for \promesse
+\patchcmd{\mtr@accconsi}{unisce.}{unisce.\\}{}{} % for \preghpost
+\patchcmd{\mtr@benanelli}{fedeltà.}{fedeltà.\\}{}{} % for \benedizioneanelli
+\patchcmd{\mtr@benanellii}{amore.}{amore.\\}{}{} % for \benedizioneanelli
+\patchcmd{\mtr@consanell}{Santo.}{Santo.\\}{}{} % for \consegnanello
+\patchcmd{\mtr@fedelintro}{coniugale.}{coniugale.\\}{}{} % for \introfedeli
+\renewcommand{\rispostafedeli}[1][Ascoltaci, o Signore.\\]{#1}
+\patchcmd{\mtr@introlitanie}{santi.}{santi.\\}{}{} % for \introlitanie
+\patchcmd{\mtr@litanie}{affligga.}{affligga.\\}{}{} % for \litanie
+\patchcmd{\mtr@litanie}{Santi e Sante tutti di Dio, & pregate per noi}{Santi e Sante tutti di Dio, & pregate per noi\\}{}{} % for \litanie
+\patchcmd{\mtr@credo}{verrà.}{verrà.\\}{}{} % for \credo
+\patchcmd{\mtr@presanto}{\rispostatutti{E con il tuo spirito.}}{\rispostatutti{E con il tuo spirito.\\}}{}{} % for \prefazio
+\patchcmd{\mtr@presanto}{\rispostatutti{Sono rivolti al Signore.}}{\rispostatutti{Sono rivolti al Signore.\\}}{}{} % for \prefazio
+\patchcmd{\mtr@presanto}{\rispostatutti{È cosa buona e giusta.}}{\rispostatutti{È cosa buona e giusta.\\}}{}{} % for \prefazio
+\patchcmd{\mtr@santo}{cieli.}{cieli.\\}{}{} % for \santosanto
+\patchcmd{\mtr@mistfedei}{venuta.}{venuta.\\}{}{} % for \misterofede
+\patchcmd{\mtr@pregheucar}{lo spezzò,
+lo diede ai suoi discepoli, e disse:}{lo spezzò,
+lo diede ai suoi discepoli, e disse:\\}{}{} % for \pregheucar
+\patchcmd{\mtr@pregheucar}{offerto in sacrificio per voi.}{offerto in sacrificio per voi.\\}{}{} % for \pregheucar
+\patchcmd{\mtr@pregheucar}{benedizione,
+lo diede ai suoi discepoli, e disse:}{benedizione,
+lo diede ai suoi discepoli, e disse:\\}{}{} % for \pregheucar
+\patchcmd{\mtr@pregheucar}{memoria di me.}{memoria di me.\\}{}{} % for \pregheucar
+\patchcmd{\mtr@pregheucar}{Mistero della fede.}{Mistero della fede.\\}{}{} % for \pregheucar
+\patchcmd{\mtr@orazioneucar}{secoli dei secoli.}{secoli dei secoli.\\}{}{} % for \orazionieucar
+\patchcmd{\mtr@benedizsposi}{ nostro Signore.}{ nostro Signore.\\}{}{} % for \benedizionesposi
+\patchcmd{\mtr@benedizsposii}{ nostro Signore.}{ nostro Signore.\\}{}{} % for \benedizionesposi
+\patchcmd{\mtr@preghcomui}{ nostro Signore.}{ nostro Signore.\\}{}{} % for \preghierecomunione
+\patchcmd{\mtr@bendizfini}{vostra casa.}{vostra casa.\\}{}{} % 
+\patchcmd{\mtr@bendizfini}{pace con tutti.}{pace con tutti.\\}{}{} % 
+\patchcmd{\mtr@bendizfini}{casa del Padre.}{casa del Padre.\\}{}{} % 
+\patchcmd{\mtr@bendizfini}{Spirito Santo.}{Spirito Santo.\\}{}{} % 
+\patchcmd{\mtr@congedo}{Andate in pace.}{Andate in pace.\\}{}{} % 
+\patchcmd{\mtr@accconsi}{ciò che Dio unisce.}{ciò che Dio unisce.\\}{}{} % 
+\makeatother
+
+\renewcommand{\versettosalmo}{Il nostro Dio è grande nell'amore.}
+\renewcommand{\versettosalmoFIN}{Herra jumalamme armo on suuri.}
+
+
+
+
+
+
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%% PAG 1 %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{pages}
+\begin{Leftside}
+  \beginnumbering
+  \pstart
+        \cantoIntro
+  \pend
+  \pstart
+        \momento[0.05em]{Riti di introduzione}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \segnocroce
+  \pend
+  \endnumbering
+\end{Leftside}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{Rightside} 
+  \beginnumbering
+  \pstart
+        \cantoIntroFIN
+  \pend
+  \pstart
+        \momento[0.05em]{Johdanto}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \segnocroceFIN
+  \pend  
+  \endnumbering 
+\end{Rightside}
+\end{pages}
+\Pages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%% PAG 2 %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{pages}
+\begin{Leftside}
+  \beginnumbering
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{Memoria del Battesimo}
+  \pend 
+  \pstart 
+  \vspace{0.2in}
+        \introduzione
+  \pend
+  \pstart 
+        \membatt
+  \pend
+  \pstart 
+        \momento{Liturgia della parola}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \begin{lettura}[]{Dalla prima lettera di San Paolo apostolo \\ai Corinzi}{1Cor 12,31b-14,1a} %{1Cor\,13,\,1--13}
+        %%
+        \lettrine[nindent=0pt,slope=-0.4em,lines=3]{F}{\,ratelli}, vi mostrerò una via migliore di tutte.
+        Se anche parlassi le lingue degli uomini e degli angeli, ma non avessi la carità, sono come un bronzo che risuona o un cembalo che tintinna.
+        E se avessi il dono della profezia e conoscessi tutti i misteri e tutta la scienza, e possedessi la pienezza della fede così da trasportare le montagne, ma non avessi la carità, non sono nulla.\\
+        %%
+        E se anche distribuissi tutte le mie sostanze e dessi il mio corpo per esser bruciato, ma non avessi la carità, niente mi giova.\\
+        %%
+        La carità è paziente, è benigna la carità; non è invidiosa la carità, non si vanta, non si gonfia, non manca di rispetto, non cerca il suo interesse, non si adira, non tiene conto del male ricevuto, non gode dell'ingiustizia, ma si compiace della verità. Tutto copre, tutto crede, tutto spera, tutto sopporta.\\
+        %%
+        La carità non avrà mai fine. Le profezie scompariranno; il dono delle lingue cesserà e la scienza svanirà. La nostra conoscenza è imperfetta e imperfetta la nostra profezia. Ma quando verrà ciò che è perfetto, quello che è imperfetto scomparirà. Quand'ero bambino, parlavo da bambino, pensavo da bambino, ragionavo da bambino. Ma, divenuto uomo, ciò che era da bambino l’ho abbandonato.\\
+        %%
+        Ora vediamo come in uno specchio, in maniera confusa; ma allora vedremo a faccia a faccia. Ora conosco in modo imperfetto, ma allora conoscerò perfettamente, come anch'io sono conosciuto. Queste dunque le tre cose che rimangono: la fede, la speranza e la carità; ma di tutte più grande è la carità!\\
+        %%
+        Ricercate la carità.\\
+        \end{lettura}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \noindent\intestfont{Salmo responsoriale}\hfil {\small\itshape\textcolor{crosscolor}{dal Salmo 102}}
+  \pend 
+  \pstart
+  \vspace{0.1in}
+        \rispostasalmo
+  \pend
+  \pstart 
+  \vspace{0.3in}
+        \begin{verse}
+            Benedici il Signore, anima mia,\\
+            quanto è in me benedica il suo santo nome.\\
+            Benedici il Signore, anima mia,\\
+            non dimenticare tanti suoi benefici.\\
+            \rispostasalmo
+
+            Buono e pietoso è il Signore,\\
+            lento all'ira e grande nell'amore.\\
+            Come un padre ha pietà dei suoi figli,\\
+            così il Signore ha pietà di quanti lo temono.\\
+            \rispostasalmo
+
+            La grazia del Signore è da sempre,\\
+            dura in eterno per quanti lo temono;\\
+            la sua giustizia per i figli dei figli,\\
+            per quanti custodiscono la sua alleanza.\\
+            \rispostasalmo
+        \end{verse}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{\textcolor{SAGEcolor}{Canto al Vangelo}}
+  \pend 
+  \pstart 
+  \vspace{0.2in}
+        \alleluia
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{Vangelo}
+  \pend 
+  \pstart 
+  \vspace{0.2in}
+        \begin{vangelo}{Giovanni}{Gv\,15,\,9--17}
+        \lettrine[nindent=-1pt,slope=0.4em,lines=3]{I}{\,n quel tempo}, Gesù disse ai suoi discepoli:
+        %%
+        <<Come il Padre ha amato me, così anch'io ho amato voi. Rimanete nel mio amore. Se osserverete i miei comandamenti, rimarrete nel mio amore, come io ho osservato i comandamenti del Padre mio e rimango nel suo amore. Questo vi ho detto perché la mia gioia sia in voi e la vostra gioia sia piena.
+        %%
+        Questo è il mio comandamento: che vi amiate gli uni gli altri, come io vi ho amati. Nessuno ha un amore più grande di questo: dare la vita per i propri amici. Voi siete miei amici, se farete ciò che io vi comando. Non vi chiamo più servi, perché il servo non sa quello che fa il suo padrone; ma vi ho chiamati amici, perché tutto ciò che ho udito dal Padre l'ho fatto conoscere a voi.
+        %%
+        Non voi avete scelto me, ma io ho scelto voi e vi ho costituiti perché andiate e portiate frutto e il vostro frutto rimanga; perché tutto quello che chiederete al Padre nel mio nome, ve lo conceda. Questo vi comando: amatevi gli uni gli altri>>.\\
+        \end{vangelo}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{Omelia}
+  \pend 
+  \pstart 
+  \vspace{0.2in}
+        \omelia
+  \pend 
+  \endnumbering
+\end{Leftside}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{Rightside} 
+  \beginnumbering
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{Kasteen Muisto}
+  \pend 
+  \pstart 
+  \vspace{0.2in}
+        \introduzioneFIN
+  \pend
+  \pstart 
+        \membattFIN
+  \pend
+  \pstart 
+        \momento{Sanan Liturgia}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \begin{letturaFIN}[]{Pyhän apostoli Paavalin ensimmäisestä kirjeestä\\ korinttilaisille}{1Kor. 12:31b-14:1a} %{1Cor\,13,\,1--13}
+        %%
+        \lettrine[nindent=0pt,slope=-0.6em,lines=3]{V}{\,eljet}, nyt minä osoitan teille tien, joka on verrattomasti muita parempi. Vaikka minä puhuisin ihmisten ja enkelien kielillä mutta minulta puuttuisi rakkaus, olisin vain kumiseva vaski tai helisevä symbaali. Vaikka minulla olisi profetoimisen lahja, vaikka tuntisin kaikki salaisuudet ja kaiken tiedon ja vaikka minulla olisi kaikki usko, niin että voisin siirtää vuoria, mutta minulta puuttuisi rakkaus, en olisi mitään. Vaikka jakaisin kaiken omaisuuteni nälkää näkeville ja vaikka antaisin polttaa itseni tulessa mutta minulta puuttuisi rakkaus, en sillä mitään voittaisi. Rakkaus on kärsivällinen, rakkaus on lempeä. Rakkaus ei kadehdi, ei kersku, ei pöyhkeile, ei käyttäydy sopimattomasti, ei etsi omaa etuaan, ei katkeroidu, ei muistele kärsimäänsä pahaa, ei iloitse vääryydestä vaan iloitsee totuuden voittaessa. Kaiken se kestää, kaikessa uskoo, kaikessa toivoo, kaiken se kärsii. Rakkaus ei koskaan katoa. Mutta profetoiminen vaikenee, kielillä puhuminen lakkaa, tieto käy turhaksi. Tietämisemme on näet vajavaista ja profetoimisemme on vajavaista, mutta kun täydellinen tulee, vajavainen katoaa. Kun olin lapsi, minä puhuin kuin lapsi, minulla oli lapsen mieli ja lapsen ajatukset. Nyt, kun olen mies, olen jättänyt sen mikä kuuluu lapsuuteen. Nyt katselemme vielä kuin kuvastimesta, kuin arvoitusta, mutta silloin näemme kasvoista kasvoihin. Nyt tietoni on vielä vajavaista, mutta kerran se on täydellistä, niin kuin Jumala minut täydellisesti tuntee. Niin pysyvät nämä kolme: usko, toivo, rakkaus. Mutta suurin niistä on rakkaus.Pyrkikää rakkauteen.\\
+        \end{letturaFIN}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \noindent\intestfont{Vuoropsalmi}\hfil {\small\itshape\textcolor{crosscolor}{Psalmista 102}}
+  \pend 
+  \pstart
+  \vspace{0.1in}
+        \rispostasalmoFIN
+  \pend
+  \pstart 
+  \vspace{0.3in}
+        \begin{verse}
+            Benedici il Signore, anima mia,\\
+            quanto è in me benedica il suo santo nome.\\
+            Benedici il Signore, anima mia,\\
+            non dimenticare tanti suoi benefici.\\
+            \rispostasalmoFIN
+
+            Buono e pietoso è il Signore,\\
+            lento all'ira e grande nell'amore.\\
+            Come un padre ha pietà dei suoi figli,\\
+            così il Signore ha pietà di quanti lo temono.\\
+            \rispostasalmoFIN
+
+            La grazia del Signore è da sempre,\\
+            dura in eterno per quanti lo temono;\\
+            la sua giustizia per i figli dei figli,\\
+            per quanti custodiscono la sua alleanza.\\
+            \rispostasalmoFIN
+            % Ylistä Herraa, minun sieluni, ja kaikki mitä\\
+            % minussa on, ylistä hänen pyhää nimeään.\\
+            % Ylistä Herraa, minun sieluni,\\
+            % älä unohda, mitä hyvää hän on sinulle tehnyt.\\
+            % \rispostasalmoFIN
+
+            % Anteeksiantava ja laupias on Herra.\\
+            % Hän on kärsivällinen ja hänen armonsa on suuri.\\
+            % Niin kuin isä armahtaa lapsiaan, niin armahtaa Herra\\
+            % niitä, jotka pelkäävät ja rakastavat häntä.\\
+            % \rispostasalmoFIN
+
+            % Mutta Herran armo pysyy ajasta aikaan, se on ikuinen\\
+            % niille, jotka pelkäävät ja rakastavat häntä.\\
+            % Polvesta polveen ulottuu hänen uskollisuutensa\\
+            % kaikkiin, jotka pysyvät hänen liitossaan.\\
+            % \rispostasalmoFIN
+        \end{verse}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{\textcolor{SAGEcolor}{Laulu Evankeliumille}}
+  \pend 
+  \pstart 
+  \vspace{0.2in}
+        \alleluiaFIN
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{Evankeliumi}
+  \pend 
+  \pstart 
+  \vspace{0.2in}
+        \begin{vangeloFIN}{Johanneksen}{Joh\,15,\,9--17}
+        \lettrine[nindent=0pt,slope=0em,lines=3]{S}{\,inä aikana}, Jeesus sanoi opetuslapsilleen:
+        %%
+        <<Niin kuin Isä on rakastanut minua, niin olen minä rakastanut teitä. Pysykää minun rakkaudessani. Jos noudatatte käskyjäni, te pysytte minun rakkaudessani, niin kuin minä olen noudattanut Isäni käskyjä ja pysyn hänen rakkaudessaan. Olen puhunut teille tämän, jotta teillä olisi minun iloni sydämessänne ja teidän ilonne tulisi täydelliseksi. Minun käskyni on tämä: rakastakaa toisianne, niin kuin minä olen rakastanut teitä. Suurempaa rakkautta ei kukaan voi osoittaa, kuin että antaa henkensä ystäviensä puolesta. Te olette ystäviäni, kun teette sen minkä käsken teidän tehdä. En sano teitä enää palvelijoiksi, sillä palvelija ei tunne isäntänsä aikeita. Minä sanon teitä ystävikseni, olenhan saattanut teidän tietoonne kaiken, minkä olen Isältäni kuullut. Ette te valinneet minua, vaan minä valitsin teidät, ja minun tahtoni on, että te lähdette liikkeelle ja tuotatte hedelmää, sitä hedelmää, joka pysyy. Kun niin teette, Isä antaa teille kaiken, mitä minun nimessäni häneltä pyydätte. Tämän käskyn minä teille annan: rakastakaa toisianne>>.\\
+        \end{vangeloFIN}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{Puhe}
+  \pend 
+  \pstart 
+  \vspace{0.2in}
+        \omeliaFIN
+  \pend 
+  \endnumbering 
+\end{Rightside}
+\end{pages}
+\Pages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%% PAG 3 %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{pages}
+\begin{Leftside}
+  \beginnumbering
+  \pstart
+  \vspace{0.2in}
+        \cantoLiturgiaMatrimonio
+  \pend 
+  \pstart 
+        \momento[0.05em]{Liturgia del Matrimonio}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+  \pend 
+  \pstart 
+  \vspace{0.2in}
+        \matrintro
+  \pend
+  \pstart 
+        \matrpre
+  \pend  
+  \pstart 
+  \pend 
+  \pstart 
+        \consintro
+  \pend    
+  \pstart 
+        \promesse
+  \pend
+  \pstart 
+  \pend 
+  \pstart 
+        \preghpost
+  \pend  
+  \pstart 
+  \pend 
+  \pstart 
+        \benedizioneanelli[2]
+  \pend  
+  \pstart 
+  \vspace{0.2in}  
+        \consegnanello
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{Preghiere dei fedeli \& Invocazioni}
+  \pend 
+  \pstart 
+  \vspace{0.2in}  
+        \introfedeli
+  \pend   
+  \pstart 
+        \preghierefedeli
+  \pend    
+  \pstart 
+        \introlitanie
+  \pend    
+  \pstart 
+        \litanie 
+  \pend 
+  \pstart
+        \vspace{0.5in} 
+        \cantoLiturgiaEucaristica
+  \pend 
+  \pstart 
+        \momento[0.05em]{Liturgia Eucaristica}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{Prefazio}
+  \pend 
+  \pstart 
+  \vspace{0.3in}
+        \prefazio
+  \pend  
+  \pstart 
+  \vspace{-0.1in}   
+        \pregheucarII
+  \pend  
+  \endnumbering
+\end{Leftside}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{Rightside} 
+  \beginnumbering
+  \pstart
+  \vspace{0.2in}
+        \cantoLiturgiaMatrimonioFIN
+  \pend 
+  \pstart 
+        \momento[0.05em]{Vihkiminen}
+  \pend  
+  \pstart 
+  \vspace{0.5in}
+  \pend 
+  \pstart 
+  \vspace{0.2in}
+        \matrintroFIN
+  \pend
+  \pstart 
+        \matrpreFIN
+  \pend  
+  \pstart 
+  \pend 
+  \pstart 
+        \consintroFIN
+  \pend    
+  \pstart 
+        \promesseFIN
+  \pend
+  \pstart 
+  \pend 
+  \pstart 
+        \preghpostFIN
+  \pend  
+  \pstart 
+  \pend 
+  \pstart 
+        \benedizioneanelliFIN[2]
+  \pend  
+  \pstart 
+  \vspace{0.2in}  
+        \consegnanelloFIN
+  \pend  
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{Uskovien Rukoukset \& Pyynnöt}
+  \pend 
+  \pstart 
+  \vspace{0.2in}  
+        \introfedeliFIN
+  \pend   
+  \pstart 
+        \preghierefedeliFIN
+  \pend    
+  \pstart 
+        \introlitanieFIN
+  \pend    
+  \pstart 
+        \litanieFIN
+  \pend  
+  \pstart
+        \vspace{0.5in} 
+        \cantoLiturgiaEucaristicaFIN
+  \pend 
+  \pstart 
+        \momento[0.05em]{Ehtoollisliturgia}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{Esipuhe}
+  \pend 
+  \pstart 
+  \vspace{0.3in}
+        \prefazioFIN
+  \pend  
+  \pstart 
+  \vspace{-0.1in}  
+        \pregheucarIIFIN
+  \pend  
+  \endnumbering
+\end{Rightside}
+\end{pages}
+\Pages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%% PAG 4 %%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{pages}
+\begin{Leftside}
+  \beginnumbering
+  \pstart
+        \momento[0.05em]{Riti di comunione}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \riticomunionePREbenedizionenuziale
+  \pend
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{Benedizione Nuziale}   
+  \pend 
+  \pstart 
+  \vspace{0.2in}  
+        \benedizionesposi[2]
+  \pend  
+  \pstart 
+        \riticomunionePOSTbenedizionenuziale
+  \pend
+  \pstart
+        \vspace{0.5in} 
+        \cantoComunione
+  \pend 
+  \pstart 
+        \momento{Benedizione Solenne}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \benedizionefinale
+  \pend
+  \pstart
+        \congedo
+  \pend 
+  \pstart
+        \vspace{0.5in} 
+        \cantoFinale
+  \pend 
+  \endnumbering
+\end{Leftside}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{Rightside} 
+  \beginnumbering
+  \pstart
+        \momento[0.05em]{Kommuunio}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \riticomunionePREbenedizionenuzialeFIN
+  \pend
+  \pstart 
+  \vspace{0.5in}
+        \sottomomento{Avioliiton Siunaus}      
+  \pend 
+  \pstart 
+  \vspace{0.2in}  
+        \benedizionesposiFIN[2]
+  \pend  
+  \pstart 
+        \riticomunionePOSTbenedizionenuzialeFIN
+  \pend
+  \pstart
+        \vspace{0.4in} 
+        \cantoComunioneFIN
+  \pend 
+  \pstart 
+        \momento{Loppusiunaus}
+  \pend 
+  \pstart 
+  \vspace{0.5in}
+        \benedizionefinaleFIN
+  \pend
+  \pstart
+        \congedoFIN
+  \pend 
+  \pstart
+        \vspace{0.4in} 
+        \cantoFinaleFIN
+  \pend 
+  \endnumbering
+\end{Rightside}
+\end{pages}
+\Pages
+\end{document}
+

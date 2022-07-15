@@ -1,0 +1,2806 @@
+%%
+%% This is file `matrita.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% matrita.dtx  (with options: `package')
+%%   ___________________________________________________________
+%%   The matrita package for LaTeX
+%%   Copyright (C) 2012 Francesco Endrici
+%%   All rights reserved
+%% 
+%%   License information appended
+%% 
+\NeedsTeXFormat{LaTeX2e}[2005/12/01]
+\ProvidesPackage{matrita_bilingual}%
+   [2013/03/13 v0.3 Package for creating wedding Mass booklets]
+\RequirePackage{longtable}
+\RequirePackage{verse}
+\RequirePackage{harmony}
+\RequirePackage{xcolor}
+\RequirePackage{etoolbox}
+\RequirePackage{array}
+\RequirePackage{ifxetex}
+\RequirePackage{pict2e}
+\RequirePackage{textcomp}
+\RequirePackage{textcase}
+\RequirePackage{fourier-orns}
+\RequirePackage{xparse}
+\RequirePackage{amssymb}
+\newif\ifmtr@cross
+\newif\ifmtr@figli
+\newif\ifmtr@comment
+\newif\ifmtr@leftjust
+\DeclareOption{cross}{\mtr@crosstrue}
+\DeclareOption{nocross}{\mtr@crossfalse}
+\DeclareOption{figli}{\mtr@figlitrue}
+\DeclareOption{nofigli}{\mtr@figlifalse}
+\DeclareOption{nocomment}{\mtr@commentfalse}
+\DeclareOption{comment}{\mtr@commenttrue}
+\DeclareOption{leftjust}{\mtr@leftjusttrue}
+\DeclareOption{noleftjust}{\mtr@leftjustfalse}
+\ExecuteOptions{cross,figli,nocomment,noleftjust}
+\ProcessOptions*\relax
+\definecolor{grigio}{gray}{0.7}
+\definecolor{respcolor}{gray}{0.7}
+\definecolor{crosscolor}{rgb}{0.3,0,4.0.4}
+\definecolor{commentcolor}{rgb}{1,0,0}
+\newcommand{\NSposa}{Laura}
+\newcommand{\NSposo}{Enzo}
+\newcommand{\sposifont}[1]{\maiuscolettospaziato{#1}}
+\newcommand{\sposa}{\sposifont{\NSposa}}
+\newcommand{\sposo}{\sposifont{\NSposo}}
+\ifxetex
+ \newcommand{\maiuscolettospaziato}[1]{%
+  {\addfontfeature{LetterSpace=6}\textsc{\MakeTextLowercase{#1}}}}
+\else
+\RequirePackage{microtype}
+\newcommand{\maiuscolettospaziato}[1]{%
+ \textsc{\MakeTextLowercase{\textls[80]{#1}}}}
+\fi
+\newlength{\premomentoskip}
+ \setlength{\premomentoskip}{2.5ex plus 0.5ex minus 1ex}
+\newcommand{\momento}[1]{%
+ {\par\vspace{\premomentoskip}%
+ \noindent\LARGE\maiuscolettospaziato{#1}}%
+ \par\nobreak\bigskip%
+}
+\newcommand{\risposta}[1]{%
+ \par\nobreak\vspace{\prerisp}%
+ \noindent\respindent\ifmtr@comment{\commentfont{Gli Sposi rispondono:\ }}\fi{\respfont#1}\par%
+ \vspace{\postrisp}%
+}
+\newcommand{\rispostatutti}[1]{%
+ \par\nobreak\vspace{\prerisp}%
+ \noindent\respindent\respsym\ {\respfont#1}\par%
+ \vspace{\postrisp}%
+} 
+\newcommand{\textinvoc}[1]{%
+ \par\nobreak\vspace{\prerisp}
+ \noindent\respindent\invocsym\ #1}
+
+\newcommand{\respsym}{\Rrecipe}
+\newcommand{\Rrecipe}{\textcolor{respcolor}{%
+\setbox0\hbox{\textsc{r}}% da Carlo Stembergher, modificato
+\unitlength\ht0
+\picture(0,0)\linethickness{.075\unitlength}
+\polyline(0.65,-0.07)(1,0.5)
+\endpicture\box0}}
+
+\newcommand{\invocsym}{\textcolor{respcolor}{%
+\setbox0\hbox{\textsc{v}}%
+\unitlength\ht0
+\picture(0,0)\linethickness{.075\unitlength}
+\polyline(0.2,-0.2)(.65,1.2)
+\endpicture\box0}}
+
+% \newlength{\prerisp}
+% \setlength{\prerisp}{0.2\baselineskip}
+\newlength{\prerisp}
+\setlength{\prerisp}{-0.5\baselineskip}
+\newlength{\postrisp}
+\setlength{\postrisp}{0.4\baselineskip}
+\newcommand{\respindent}{\hspace{0pt}}
+\newcommand{\respfont}{\itshape}
+\newcommand{\rispostafedeli}[1][Ascoltaci, o Signore.]{#1}
+\renewcommand{\@vstypeptitle}[1]{% grazie a Barbara Beeton
+  \vspace{\beforepoemtitleskip}
+  {\noindent\poemtitlefont #1\par}\nobreak
+  \vspace{\afterpoemtitleskip}
+}
+
+\setlength{\leftmargini}{0em}
+\newlength{\titleindent}
+ \setlength{\titleindent}{0em}
+\newcommand{\mtr@titleindent}{\hspace{\titleindent}}
+\newcommand{\canztitle}[1]{\poemtitle*{\mtr@titleindent\precanztitle#1\postcanztitle}}
+\newenvironment{canzone}{%
+\begin{verse}}%
+{\end{verse}}
+% NEW PART
+% \newcommand{\precanztitle}{\decothreeleft\ }
+% \newcommand{\postcanztitle}{\ \decothreeright}
+\newcommand{\precanztitle}{}
+\newcommand{\postcanztitle}{}
+
+% NEW PART
+\newenvironment{ritornello2}{%
+    % \medskip%
+    % \par%
+    % \noindent%
+    \textbf{\textcolor{SAGEcolor}{Rit.}
+    }%
+    \itshape%\ignorespaces%
+    }%
+    {%
+    %\smallskip\par%
+    }
+
+\newenvironment{ritornello}{\ritfont}{}
+\newcommand{\ritfont}{\itshape}
+\newcommand{\chiusura}[1]{%
+  \par\nobreak\smallskip
+  \ifx#1v%
+    Parola del Signore\rispostatutti{Lode a te o Cristo}
+  \else
+    Parola di Dio\rispostatutti{Rendiamo grazie a Dio}
+  \fi}
+  
+% OLD
+% \NewDocumentEnvironment{lettura}{ o m m }
+%  {\par\medskip
+%   \IfNoValueTF{#1}{}{\noindent\intestfont{#1 lettura}\\*[.5ex]}
+%   \noindent\nomelibrofont{#2}\hspace{1em}%
+%   {\rifbibfont{(#3)}}\par\nobreak\smallskip}
+%   {\chiusura{a}
+%  }
+% NEW PART
+\NewDocumentEnvironment{lettura}{ o m m }
+ {\par\medskip
+  \IfNoValueTF{#1}{}{\noindent\intestfont{#1 lettura}\\*[.5ex]}
+  \noindent\nomelibrofont{#2}\hspace{1em}%
+  {\rifbibfont{(#3)\\}}\par\nobreak\smallskip}
+  {\chiusura{a}
+ }
+ 
+\NewDocumentEnvironment{vangelo}{o m m }
+  {\par\medskip
+   \IfNoValueTF{#1}{}{\noindent\intestfont{#1}\\*[.5ex]}
+   \noindent\cross\nomelibrofont{Dal Vangelo secondo #2}\hspace{1em}%
+   {\rifbibfont{(#3)}}\par\nobreak\smallskip}
+  {\chiusura{v}\postvangelocomment}
+\newcommand{\mtrskip}{\medskip}
+\newcommand{\intestfont}[1]{{\large\textit{#1}}}
+\newcommand{\nomelibrofont}[1]{{\textsc{#1}}}
+\newcommand{\rifbibfont}{\small\textsc}
+\newcommand{\versettosalmo}{}
+\newcommand{\rispostasalmo}{\nobreak\smallskip\respsym\ {\respfont\versettosalmo}}
+\newcommand{\Santo}[1]{%
+\expandafter\@santo#1}
+\def\@santo{\futurelet\next\@firstvocalverify}
+\def\@vocaltrue{Sant'}
+\def\@vocalfalse{San~}
+\def\@firstvocalverify{%
+  \ifx\next A%
+    \@vocaltrue
+  \else
+   \ifx\next E%
+    \@vocaltrue
+   \else
+    \ifx\next I%
+     \@vocaltrue
+    \else
+     \ifx\next O%
+      \@vocaltrue
+     \else
+      \ifx\next U%
+       \@vocaltrue
+      \else
+       \@vocalfalse
+      \fi
+     \fi
+    \fi
+   \fi
+  \fi}
+\newcommand{\personallitania}{}
+\newcommand{\litasposo}{\Santo{\NSposo}, & prega per noi\\}
+\newcommand{\litasposa}{Santa \NSposa, & prega per noi\\}
+\newcommand{\litachiesa}{}
+\newcommand{\miosanto}{}
+\def\@miosanto{%
+\if\miosanto
+  \else
+ ,\ \miosanto
+\fi}
+\newcommand{\nomevescovo}{Giovanni}
+\newcommand{\nomepapa}{Francesco}
+\newcommand{\cross}{\ifmtr@cross\textcolor{crosscolor}{{\footnotesize\maltese}}\ \fi}
+\newcommand{\consacrazfont}{\large}
+\newcommand{\crossep}{\ifmtr@cross\hspace{0.5em}\fi}
+\newcommand{\commentindent}{\noindent}
+\newcommand{\commentfont}{\footnotesize\itshape\color{commentcolor}}
+\newenvironment{mtrcomment}{\par\smallskip\commentindent\commentfont}
+{\ignorespacesafterend\par\nobreak\smallskip\nobreak}
+\newcommand{\mtr@endline}{\ifmtr@leftjust\\\else{ }\fi}
+\newenvironment{justpregh}{\ifmtr@leftjust\setlength{\parindent}{0pt}%
+\bgroup\obeylines\fi}{\ifmtr@leftjust\egroup\fi}
+\newcommand{\segnocrocecomment}{%
+\ifmtr@comment\begin{mtrcomment}\mtr@segnocrocecomment\end{mtrcomment}\fi}
+\newcommand{\segnocroce}{\mtr@segnocroce}
+\newcommand{\introcomment}{\ifmtr@comment\begin{mtrcomment}%
+ \mtr@introcomment\end{mtrcomment}\fi}
+\newcommand\introduzione[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@introi}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@introii}{%
+   \ifnumcomp{#1}{=}{3}{\mtr@introiii}{\errmessage{%
+   L'argomento del comando deve essere compreso fra 1 e 3}}}}
+}
+\newcommand{\baptmemcommenti}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@baptmemcommenti\end{mtrcomment}\fi}
+\newcommand{\baptmemcommentii}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@baptmemcommentii\end{mtrcomment}\fi}
+\newcommand{\baptmemcommentiii}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@baptmemcommentiii\end{mtrcomment}\fi}
+\newcommand{\membatt}{\mtr@baptmem}
+\newcommand{\gloria}{\mtr@gloria}
+\newcommand\colletta[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@collettai}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@collettaii}{%
+   \ifnumcomp{#1}{=}{3}{\mtr@collettaiii}{%
+    \ifnumcomp{#1}{=}{4}{\mtr@collettaiv}{%
+     \ifnumcomp{#1}{=}{5}{\mtr@collettav}{%
+      \ifnumcomp{#1}{=}{6}{\mtr@collettavi}{\errmessage{%
+       L'argomento del comando deve essere compreso fra 1 e 6}}}}}}}
+}
+
+\newcommand{\postvangelocomment}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@postvangelocomment\end{mtrcomment}\fi}
+ 
+% NEW
+% quotes
+\newcommand{\quotes}[1]{``#1''}
+
+% NEW
+\newcommand{\omelia}{\mtr@omeliaI}
+\newcommand\mtr@omeliaI{% 
+% Alcune riflessioni a partire dal Vangelo ascoltato
+% \\ \\
+% \lettrine[nindent=0pt,slope=0.4em,lines=3]{A}{\,vete scelto le parole di Gesù}
+Avete scelto le parole di Gesù \quotes{Rimanete nel mio amore}, come il programma di vita del vostro matrimonio.
+% \\ \\
+Cosa significa \quotes{rimanere}?
+% {\setmainfont{Symbola}
+% \symbol{"1F54A}%
+% \symbol{"101EF}}%
+\\ \\
+% \texttwemoji{1f54a} \, \quotes{Rimanere} 
+\textcolor{SAGEcolor}{\faDove} \, \quotes{Rimanere} è anzitutto rendersi conto dell’amore già ricevuto. L’amore non è una realtà da conquistare, ma un dono, una storia da riconoscere e valorizzare. L’amore allora vive di memoria e di gratitudine.
+\\ \\
+\textcolor{SAGEcolor}{\faDove} \, \quotes{Rimanere} vuol dire anche \quotes{difendere}, cioè lottare affinché niente e nessuno porti via l’amore. Occorre infatti ricordare che i primi nemici dell’amore siamo noi stessi quando lasciamo che il possesso prenda il posto del dono, la rabbia prenda il posto del dialogo, la vendetta prenda il posto del perdono, la chiusura in noi stessi prenda il posto dell’ascolto. 
+\\ \\
+\textcolor{SAGEcolor}{\faDove} \, \quotes{Rimanere} vuol dire anche \quotes{far crescere, sviluppare}. Se non cresce, l’amore cala. Se non viene coltivato e allenato, l’amore muore. Per questo Gesù dice \quotes{rimante nel mio amore}. Infatti  restando ancorati a Gesù e mantenendo un rapporto vivo con Lui, si impara ad amare come Lui.
+\\ \\
+Da Gesù si impara che l’amore è \quotes{dare la vita}. Chi ama si domanda continuamente: \quotes{il mio amore sta rendendo l’altro più forte, più responsabile, più libero, più accolto…?}.
+\\ \\
+Da Gesù si impara che l’amore è sempre concreto e valorizza il presente e le circostanze per amare. Il presente infatti è l’unica possibilità concreta per amare se non vogliamo che l’amore si riduca a nostalgia (il passato) o sogno e illusione (il futuro).
+}
+
+ 
+ 
+\newcommand{\matrintrocomment}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@matrintrocomment\end{mtrcomment}\fi}
+\newcommand\matrintro[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@matrintroi}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@matrintroii}{\errmessage{%
+  L'argomento del comando deve essere compreso fra 1 e 2}}}
+}
+\newcommand{\matrprecommenti}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@matrprecommenti\end{mtrcomment}\fi}
+\newcommand{\matrprecommentii}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@matrprecommentii\end{mtrcomment}\fi}
+
+\newcommand\matrpre[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@matrprei}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@matrpreii}{\errmessage{%
+  L'argomento del comando deve essere compreso fra 1 e 2}}}
+}
+\newcommand{\consintrocommenti}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@consintrocommenti\end{mtrcomment}\fi}
+\newcommand{\consintrocommentii}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@consintrocommentii\end{mtrcomment}\fi}
+\newcommand\consintro[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@consintroi}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@consintroii}{\errmessage{%
+  L'argomento del comando deve essere compreso fra 1 e 2}}}
+}
+\newcommand\promesse[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@matri}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@matrii}{%
+   \ifnumcomp{#1}{=}{3}{\mtr@matriii}{\errmessage{%
+   L'argomento del comando deve essere compreso fra 1 e 3}}}}
+}
+\newcommand{\accconscomment}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@accconscomment\end{mtrcomment}\fi}
+\newcommand\preghpost[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@accconsi}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@accconsii}{\errmessage{%
+  L'argomento del comando deve essere compreso fra 1 e 2}}}
+}
+\newcommand{\benanellicommenti}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@benanellicommenti\end{mtrcomment}\fi}
+\newcommand{\benanellicommentii}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@benanellicommentii\end{mtrcomment}\fi}
+\newcommand\benedizioneanelli[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@benanelli}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@benanellii}{%
+   \ifnumcomp{#1}{=}{3}{\mtr@benanelliii}{%
+    \ifnumcomp{#1}{=}{4}{\mtr@benanelliv}{\errmessage{%
+    L'argomento del comando deve essere compreso fra 1 e 4}}}}}
+}
+
+\newcommand{\consanellcommento}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@consanellcommento\end{mtrcomment}\fi}
+\newcommand{\consanellcommenta}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@consanellcommenta\end{mtrcomment}\fi}
+\newcommand{\consegnanello}{\mtr@consanell}
+
+\newcommand{\incoronazionecommenti}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@incoronazionecommenti\end{mtrcomment}\fi}
+\newcommand{\incoronazionecommentii}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@incoronazionecommentii\end{mtrcomment}\fi}
+\newcommand{\incoronazione}{\mtr@incoronazione}
+
+\newcommand{\introfedeli}{\mtr@fedelintro}
+\newcommand{\preghierefedeli}{\mtr@fedelistandard}
+\newcommand{\introlitaniecomment}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@introlitaniecomment\end{mtrcomment}\fi}
+\newcommand{\introlitanie}{\mtr@introlitanie}
+\newcommand{\postlitaniecomment}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@postlitaniecomment\end{mtrcomment}\fi}
+\newcommand{\litanie}{\mtr@litanie}
+\newcommand{\credo}{\mtr@credo}
+
+\newcommand\preghieraofferte[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@offertei}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@offerteii}{%
+   \ifnumcomp{#1}{=}{3}{\mtr@offerteiii}{\errmessage{%
+   L'argomento del comando deve essere compreso fra 1 e 3}}}}
+}
+\newcommand{\prefazio}{\mtr@presanto}
+\newcommand{\santosanto}{\mtr@santo}
+\newcommand{\pregheucar}{\mtr@pregheucar}
+
+\newcommand{\misterofede}[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\rispostatutti{\mtr@mistfedei}}{%
+  \ifnumcomp{#1}{=}{2}{\rispostatutti{\mtr@mistfedeii}}{%
+   \ifnumcomp{#1}{=}{3}{\rispostatutti{\mtr@mistfedeiii}}{\errmessage{%
+   L'argomento del comando deve essere compreso fra 1 e 3}}}}
+}
+\newcommand{\orazionieucar}{\mtr@orazioneucar}
+
+\newcommand{\benedizsposcommenti}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@benedizsposcommenti\end{mtrcomment}\fi}
+\newcommand{\benedizsposcommentii}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@benedizsposcommentii\end{mtrcomment}\fi}
+\newcommand\benedizionesposi[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@benedizsposi}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@benedizsposii}{%
+   \ifnumcomp{#1}{=}{3}{\mtr@benedizsposiii}{%
+    \ifnumcomp{#1}{=}{4}{\mtr@benedizsposiv}{\errmessage{%
+    L'argomento del comando deve essere compreso fra 1 e 4}}}}}
+}
+
+\newcommand\preghierecomunione[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@preghcomui}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@preghcomuii}{%
+   \ifnumcomp{#1}{=}{3}{\mtr@preghcomuiii}{\errmessage{%
+   L'argomento del comando deve essere compreso fra 1 e 3}}}}
+}
+
+\newcommand{\benedizfincomment}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@benedizfincomment\end{mtrcomment}\fi}
+\newcommand\benedizionefinale[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@prebenedizfin\mtr@bendizfini}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@prebenedizfin\mtr@bendizfinii}{%
+   \ifnumcomp{#1}{=}{3}{\mtr@prebenedizfin\mtr@bendizfiniii}{\errmessage{%
+   L'argomento del comando deve essere compreso fra 1 e 3}}}}
+}
+\newcommand{\congedocomment}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@congedocomment\end{mtrcomment}\fi}
+\newcommand{\congedo}{\mtr@congedo}
+
+\newcommand{\articolicomment}{%
+ \ifmtr@comment\begin{mtrcomment}\mtr@articolicomment\end{mtrcomment}\fi}
+\newcommand{\articolilegge}{\mtr@articoli}
+
+\newcommand{\mtr@segnocrocecomment}{%
+Il sacerdote saluta l'assemblea con queste parole o altre simili:}
+\newcommand{\mtr@segnocroce}{%
+Nel nome del Padre, del Figlio\mtr@endline
+e dello Spirito Santo.
+\rispostatutti{Amen.}
+
+\segnocrocecomment
+La grazia del Signore nostro Gesù Cristo,\mtr@endline
+l'amore di Dio Padre\mtr@endline
+e la comunione dello Spirito Santo\mtr@endline
+sia con tutti voi.
+\rispostatutti{E con il tuo spirito.}}
+
+\newcommand{\mtr@introcomment}{%
+Per disporre gli sposi e i presenti alla celebrazione del Matrimonio,
+il sacerdote invita a far memoria del Battesimo, con queste e simili parole:}
+
+\newcommand\mtr@introi{%
+\introcomment
+Fratelli e sorelle,\mtr@endline
+ci siamo riuniti con gioia nella casa del Signore\mtr@endline
+nel giorno in cui \sposa{} e \sposo{}\mtr@endline
+intendono formare la loro famiglia.\mtr@endline
+In quest'ora di particolare grazia\mtr@endline
+siamo loro vicini con l'affetto,\mtr@endline
+con l'amicizia e la preghiera fraterna.\mtr@endline
+Ascoltiamo attentamente insieme con loro\mtr@endline
+la Parola che Dio oggi ci rivolge.\mtr@endline
+In unione con la santa Chiesa\mtr@endline
+supplichiamo Dio Padre,\mtr@endline
+per Cristo Signore nostro,\mtr@endline
+perché benedica questi suoi figli\mtr@endline
+che stanno per celebrare il loro Matrimonio,\mtr@endline
+li accolga nel suo amore\mtr@endline
+e li costituisca in unità.
+
+Facciamo ora memoria del Battesimo,\mtr@endline
+nel quale siamo rinati a vita nuova.\mtr@endline
+Divenuti figli nel Figlio,\mtr@endline
+riconosciamo con gratitudine il dono ricevuto,\mtr@endline
+per rimanere fedeli all'amore a cui siamo stati chiamati.%
+}
+
+\newcommand\mtr@introii{%
+\introcomment
+\sposa{} e \sposo,\mtr@endline
+la Chiesa partecipa alla vostra gioia\mtr@endline
+e insieme con i vostri cari\mtr@endline
+vi accoglie con grande affetto\mtr@endline
+nel giorno in cui davanti a Dio, nostro Padre,\mtr@endline
+decidete di realizzare la comunione di tutta la vita.\mtr@endline
+In questo giorno per voi di festa\mtr@endline
+il Signore vi ascolti.\mtr@endline
+Mandi dal cielo il suo aiuto e vi custodisca.\mtr@endline
+Realizzi i desideri del vostro cuore\mtr@endline
+ed esaudisca le vostre preghiere.
+
+Riconoscenti per essere divenuti figli nel Figlio,\mtr@endline
+facciamo ora memoria del Battesimo,\mtr@endline
+dal quale, come da seme fecondo,\mtr@endline
+nasce e prende vigore l'impegno\mtr@endline
+di vivere fedeli nell'amore.%
+}
+\newcommand\mtr@introiii{%
+\introcomment
+Carissimi,\mtr@endline
+celebriamo il grande mistero\mtr@endline
+dell'amore di Cristo per la sua Chiesa.\mtr@endline
+Oggi \sposa{} e \sposo{} sono chiamati a parteciparvi\mtr@endline
+con il loro Matrimonio.
+
+Riconoscenti per essere divenuti figli nel Figlio,\mtr@endline
+facciamo ora memoria del Battesimo,\mtr@endline
+inizio della vita nuova nella fede,\mtr@endline
+sorgente e fondamento di ogni vocazione.\mtr@endline
+Dio nostro Padre,\mtr@endline
+con la forza del suo Santo Spirito,\mtr@endline
+ravvivi in tutti noi il dono\mtr@endline
+di quella benedizione originaria.%
+}
+\newcommand{\mtr@baptmemcommenti}{%
+Dopo l'invito iniziale, il sacerdote rimane in piedi alla sede,
+rivolto verso il popolo. Alcuni ministranti portano dinanzi a lui l'acqua benedetta.
+Quindi si ringrazia per il dono del Battesimo.
+Dove è possibile, la memoria del Battesimo avviene presso il fonte battesimale.}
+\newcommand{\mtr@baptmemcommentii}{Il sacerdote continua:}
+\newcommand{\mtr@baptmemcommentiii}{%
+Il sacerdote segna sé stesso con l'acqua benedetta,
+poi asperge gli sposi e l'assemblea dei fedeli.}
+\newcommand\mtr@baptmem{%
+Padre,\mtr@endline
+nel Battesimo del tuo Figlio Gesù al fiume Giordano\mtr@endline
+hai rivelato al mondo l'amore sponsale\mtr@endline per il tuo popolo.
+\rispostatutti{Noi ti lodiamo e ti rendiamo grazie.}
+
+Cristo Gesù,\mtr@endline
+dal tuo costato aperto sulla Croce\mtr@endline
+hai generato la Chiesa,
+tua diletta sposa.
+\rispostatutti{Noi ti lodiamo e ti rendiamo grazie.}
+
+Spirito Santo,\mtr@endline
+potenza del Padre e del Figlio,\mtr@endline
+oggi fai risplendere\mtr@endline in \sposa{} e \sposo{}\mtr@endline
+la veste nuziale della Chiesa.
+\rispostatutti{Noi ti lodiamo e ti rendiamo grazie.}
+
+\baptmemcommentii
+Dio onnipotente,\mtr@endline
+origine e fonte della vita,\mtr@endline
+che ci hai rigenerati nell'acqua\mtr@endline
+con la potenza del tuo Spirito,\mtr@endline
+ravviva in tutti noi la grazia del Battesimo,\mtr@endline
+e concedi a \sposa{} e \sposo{}\mtr@endline un cuore libero e una fede ardente\mtr@endline
+perché, purificati nell'intimo,\mtr@endline
+accolgano il dono del Matrimonio,\mtr@endline
+nuova via della loro santificazione.
+
+Per Cristo nostro Signore.
+\rispostatutti{Amen.}
+
+\baptmemcommentiii%
+}
+\newcommand{\mtr@gloria}{%
+Gloria a Dio nell'alto dei cieli,\\
+e pace in terra agli uomini, amati dal Signore.\\
+Noi ti lodiamo, ti benediciamo,\\
+ti adoriamo, ti glorifichiamo,\\
+ti rendiamo grazie per la tua gloria immensa,\\
+Signore Dio, Re del cielo, Dio Padre onnipotente.\\
+Signore, Figlio unigenito, Gesù Cristo,\\
+Signore Dio, Agnello di Dio, Figlio del Padre:\\
+tu che togli i peccati del mondo, abbi pietà di noi;\\
+tu che togli i peccati del mondo,\\ accogli la nostra supplica;\\
+tu che siedi alla destra del Padre, abbi pietà di noi.\\
+Perché tu solo il Santo, tu solo il Signore,\\
+tu solo l'Altissimo:\\ Gesù Cristo con lo Spirito Santo\\
+nella gloria di Dio Padre.
+\rispostatutti{Amen.}
+}
+\newcommand\mtr@collettai{%
+O Dio, che in questo grande sacramento hai consacrato il patto coniugale,
+per rivelare nell'unione degli sposi il mistero di Cristo e della Chiesa,
+concedi a \sposa{} e \sposo{} di esprimere nella vita il dono che ricevono nella fede.
+Per il nostro Signore Gesù Cristo, tuo Figlio, che è Dio, e vive e regna con te,
+nell'unità dello Spirito Santo, per tutti i secoli dei secoli. \rispostatutti{Amen.}
+}
+\newcommand\mtr@collettaii{%
+O Dio, che fin dagli inizi della creazione hai voluto l'unità fra l'uomo e la donna,
+congiungi con il vincolo di un solo amore questi tuoi figli,
+che oggi si uniscono in matrimonio, e fa' che siano testimoni
+di quella carità che hai loro donato. Per il nostro Signore Gesù Cristo,
+tuo Figlio, che è Dio, e vive e regna con te, nell'unità dello Spirito Santo,
+per tutti i secoli dei secoli. \rispostatutti{Amen.}
+}
+
+\newcommand\mtr@collettaiii{%
+Ascolta, Signore, la nostra preghiera ed effondi con bontà la tua grazia
+su \sposa{} e \sposo, perché, unendosi davanti al tuo altare,
+siano confermati nel reciproco amore. Per il nostro Signore Gesù Cristo,
+tuo Figlio, che è Dio, e vive e regna con te, nell'unità dello Spirito Santo,
+per tutti i secoli dei secoli. \rispostatutti{Amen.}
+}
+\newcommand\mtr@collettaiv{%
+Dio onnipotente, concedi a \sposa{} e \sposo, che oggi consacrano il loro amore,
+di crescere insieme nella fede che professano davanti a te,
+e di arricchire con i loro figli la tua Chiesa. Per il nostro Signore Gesù Cristo,
+tuo Figlio, che è Dio, e vive e regna con te,
+nell'unità dello Spirito Santo, per tutti i secoli dei secoli. \rispostatutti{Amen.}
+}
+\newcommand\mtr@collettav{%
+Ascolta, o Signore, la nostra preghiera e sostieni
+con il tuo amore il vincolo del matrimonio che tu stesso hai istituito
+per la crescita del genere umano, perché l'unione che da te ha origine,
+da te sia custodita. Per il nostro Signore Gesù Cristo, tuo Figlio,
+che è Dio, e vive e regna con te, nell'unità dello Spirito Santo,
+per tutti i secoli dei secoli. \rispostatutti{Amen.}
+}
+
+\newcommand\mtr@collettavi{%
+O Dio, che dall'inizio del mondo benedici l'uomo e la donna
+con la grazia della fecondità, accogli la nostra preghiera:
+scenda la tua benedizione su \sposa{} e \sposo, tuoi figli,
+perché, nel loro matrimonio, siano uniti nel reciproco amore,
+nell'unico progetto di vita, nel comune cammino di santità.
+Per il nostro Signore Gesù Cristo, tuo Figlio, che è Dio,
+e vive e regna con te, nell'unità dello Spirito Santo,
+per tutti i secoli dei secoli. \rispostatutti{Amen.}
+}
+\newcommand{\mtr@postvangelocomment}{%
+Il sacerdote, o il diacono che ha proclamato il Vangelo,
+bacia per primo l’Evangeliario e quindi lo porta agli sposi
+invitando anch'essi a venerarlo.}
+
+\newcommand{\mtr@matrintrocomment}{%
+Terminata l'omelia e dopo qualche momento di silenzio, gli sposi,
+i testimoni e tutti i presenti si alzano in piedi.
+Quindi, il sacerdote si rivolge agli sposi con queste o altre simili parole:}
+\newcommand\mtr@matrintroi{%
+\matrintrocomment
+Carissimi\mtr@endline \sposa{} e \sposo,\mtr@endline
+siete venuti insieme nella casa del Padre,\mtr@endline
+perché la vostra decisione di unirvi in Matrimonio\mtr@endline
+riceva il suo sigillo e la sua consacrazione,\mtr@endline
+davanti al ministro della Chiesa\mtr@endline e davanti alla comunità.\mtr@endline
+Voi siete già consacrati mediante il Battesimo:\mtr@endline
+ora Cristo vi benedice e vi rafforza\mtr@endline con il sacramento nuziale,\mtr@endline
+perché vi amiate l'un l'altro\mtr@endline con amore fedele e inesauribile\mtr@endline
+e assumiate responsabilmente\mtr@endline i doveri del Matrimonio.
+
+Pertanto vi chiedo di esprimere\mtr@endline
+davanti alla Chiesa le vostre intenzioni.%
+}
+
+\newcommand\mtr@matrintroii{%
+\matrintrocomment
+Carissimi \sposa{} e \sposo,\mtr@endline
+siete venuti nella casa del Signore,\mtr@endline
+davanti al ministro della Chiesa e davanti alla comunità,\mtr@endline
+perché la vostra decisione di unirvi in Matrimonio\mtr@endline
+riceva il sigillo dello Spirito Santo,\mtr@endline
+sorgente dell'amore fedele e inesauribile.\mtr@endline
+Ora Cristo vi rende partecipi dello stesso amore\mtr@endline
+con cui egli ha amato la sua Chiesa,\mtr@endline
+fino a dare sé stesso per lei.
+
+Vi chiedo pertanto di esprimere le vostre intenzioni.%
+}
+\newcommand{\mtr@matrprecommenti}{%
+Il sacerdote interroga gli sposi sulla libertà,
+sulla fedeltà e sull'accoglienza ed educazione dei figli
+e ciascuno personalmente risponde.
+}
+\newcommand{\mtr@matrprecommentii}{%
+Gli sposi possono dichiarare le loro intenzioni circa la libertà,
+la fedeltà, l'accoglienza e l'educazione dei figli
+pronunciando insieme la seguente formula:
+}
+
+\newcommand\mtr@matrprei{%
+\matrprecommenti
+\sposa{} e \sposo,\mtr@endline
+siete venuti a celebrare il Matrimonio\mtr@endline
+senza alcuna costrizione,\mtr@endline in piena libertà e consapevoli\mtr@endline
+del significato della vostra decisione?
+\risposta{Sì.}
+
+Siete disposti, seguendo la via del Matrimonio,\mtr@endline
+ad amarvi e a onorarvi l'un l'altro per tutta la vita?
+\risposta{Sì.}
+\ifmtr@figli
+
+Siete disposti ad accogliere con amore\mtr@endline
+i figli che Dio vorrà donarvi\mtr@endline
+e a educarli secondo la legge di Cristo\mtr@endline e della sua Chiesa?
+\risposta{Sì.\\ % \\ added
+}\fi%
+}
+
+\newcommand\mtr@matrpreii{%
+\matrprecommenti
+Compiuto il cammino del fidanzamento,\mtr@endline
+illuminati dallo Spirito Santo\mtr@endline
+e accompagnati dalla comunità cristiana,\mtr@endline
+siamo venuti in piena libertà\mtr@endline
+nella casa del Padre\mtr@endline
+perché il nostro amore riceva il sigillo di consacrazione.
+
+Consapevoli della nostra decisione,\mtr@endline
+siamo disposti,\mtr@endline
+con la grazia di Dio,\mtr@endline
+ad amarci e sostenerci l'un l'altro\mtr@endline
+per tutti i giorni della vita.
+\ifmtr@figli
+
+Ci impegniamo ad accogliere con amore i figli\mtr@endline
+che Dio vorrà donarci\mtr@endline
+e a educarli secondo la Parola di Cristo\mtr@endline
+e l'insegnamento della Chiesa.
+\fi
+
+Chiediamo a voi, fratelli e sorelle,\mtr@endline
+di pregare con noi e per noi\mtr@endline
+perché la nostra famiglia\mtr@endline
+diffonda nel mondo luce, pace e gioia.%
+}
+\newcommand{\mtr@consintrocommenti}{%
+Il sacerdote invita gli sposi a rivolgersi l'uno verso l'altro e ad esprimere il consenso.}
+\newcommand{\mtr@consintrocommentii}{%
+Gli sposi si danno la mano destra.}
+\newcommand\mtr@consintroi{%
+\consintrocommenti
+Se dunque è vostra intenzione\mtr@endline unirvi in Matrimonio,\mtr@endline
+datevi la mano destra\mtr@endline
+ed esprimete davanti a Dio e alla sua Chiesa\mtr@endline
+il vostro consenso.
+
+\consintrocommentii
+}
+\newcommand\mtr@consintroii{%
+\consintrocommenti
+Alla presenza di Dio\mtr@endline
+e davanti alla Chiesa qui riunita,\mtr@endline
+datevi la mano destra ed esprimete il vostro consenso.\mtr@endline
+Il Signore, inizio e compimento del vostro amore,\mtr@endline
+sia con voi sempre.
+
+\consintrocommentii
+}
+\newcommand\mtr@matri{%
+\ifmtr@comment\commentindent{%
+\commentfont Lo sposo si rivolge alla sposa con queste parole:\par}\fi
+Io \sposo,\mtr@endline accolgo te, \sposa,\mtr@endline come mia sposa.\mtr@endline
+Con la grazia di Cristo\mtr@endline
+prometto di esserti fedele sempre,\mtr@endline
+nella gioia e nel dolore,\mtr@endline
+nella salute e nella malattia,\mtr@endline
+e di amarti e onorarti\mtr@endline
+tutti i giorni della mia vita.
+
+\mtrskip
+\ifmtr@comment\commentindent{\commentfont{%
+La sposa si rivolge allo sposo con queste parole:}\par}\fi
+Io \sposa,\mtr@endline accolgo te, \sposo,\mtr@endline come mio sposo.\mtr@endline
+Con la grazia di Cristo\mtr@endline
+prometto di esserti fedele sempre,\mtr@endline
+nella gioia e nel dolore,\mtr@endline
+nella salute e nella malattia,\mtr@endline
+e di amarti e onorarti\mtr@endline
+tutti i giorni della mia vita.%
+}
+
+\newcommand\mtr@matrii{%
+\ifmtr@comment\commentindent{\commentfont{Sposo:}\par}\fi
+\sposa, vuoi unire la tua vita alla mia,\mtr@endline
+nel Signore che ci ha creati e redenti?
+\risposta{Sì, con la grazia di Dio, lo voglio.}
+
+\mtrskip
+\ifmtr@comment\commentindent{\commentfont{Sposa:}\par}\fi
+\sposo, vuoi unire la tua vita alla mia,\mtr@endline
+nel Signore che ci ha creati e redenti?
+\risposta{Sì, con la grazia di Dio, lo voglio.}
+
+\mtrskip
+\ifmtr@comment\commentindent{\commentfont{Insieme:}\par}\fi
+Noi promettiamo di amarci fedelmente,\mtr@endline
+nella gioia e nel dolore,\mtr@endline
+nella salute e nella malattia,\mtr@endline
+e di sostenerci l'un l'altro tutti i giorni della nostra vita.%
+}
+\newcommand\mtr@matriii{%
+\ifmtr@comment\commentindent{\commentfont{%
+Il sacerdote, se per motivi pastorali lo ritiene opportuno,
+può richiedere il consenso in forma di domanda.
+Interroga prima lo sposo:\endgraf}}\fi
+\sposo,\mtr@endline vuoi accogliere \sposa{} come tua sposa nel Signore,\mtr@endline
+promettendo di esserle fedele sempre,\mtr@endline
+nella gioia e nel dolore,\mtr@endline
+nella salute e nella malattia,\mtr@endline
+e di amarla e onorarla\mtr@endline
+tutti i giorni della tua vita?
+\risposta{Sì.}
+
+\mtrskip
+\ifmtr@comment\commentindent{\commentfont{Quindi interroga la sposa:}
+\par}\fi
+\sposa,\mtr@endline vuoi accogliere \sposo{} come tuo sposo nel Signore,\mtr@endline
+promettendo di essergli fedele sempre,\mtr@endline
+nella gioia e nel dolore,\mtr@endline
+nella salute e nella malattia,\mtr@endline
+e di amarlo e onorarlo\mtr@endline
+tutti i giorni della tua vita?
+\risposta{Sì.}%
+}
+\newcommand{\mtr@accconscomment}{%
+Il sacerdote, stendendo la mano sulle mani unite degli sposi, dice:}
+\newcommand{\mtr@accconsi}{%
+\accconscomment
+Il Signore onnipotente e misericordioso\mtr@endline
+confermi il consenso\mtr@endline
+che avete manifestato davanti alla Chiesa\mtr@endline
+e vi ricolmi della sua benedizione.\mtr@endline
+L'uomo non osi separare ciò che Dio unisce.
+\rispostatutti{Amen.}
+}
+\newcommand{\mtr@accconsii}{%
+\accconscomment
+Il Dio di Abramo,\mtr@endline
+il Dio di Isacco,\mtr@endline
+il Dio di Giacobbe,\mtr@endline
+il Dio che nel paradiso ha unito Adamo ed Eva\mtr@endline
+confermi in Cristo\mtr@endline
+il consenso che avete manifestato davanti alla Chiesa\mtr@endline
+e vi sostenga con la sua benedizione.\mtr@endline
+L'uomo non osi separare ciò che Dio unisce.
+\rispostatutti{Amen.}
+}
+\newcommand{\mtr@benanellicommenti}{%
+Sono presentati gli anelli. Il sacerdote li benedice:}
+\newcommand{\mtr@benanellicommentii}{Il sacerdote asperge,
+se lo ritiene opportuno, gli anelli e li consegna agli sposi.}
+\newcommand\mtr@benanelli{%
+\benanellicommenti
+Il Signore benedica \cross questi anelli,\mtr@endline
+che vi donate scambievolmente\mtr@endline
+in segno di amore e di fedeltà.%
+
+\benanellicommentii
+}
+\newcommand\mtr@benanellii{%
+\benanellicommenti
+Signore, benedici \cross questi anelli nuziali:\mtr@endline
+gli sposi che li porteranno\mtr@endline
+custodiscano integra la loro fedeltà,\mtr@endline
+rimangano nella tua volontà e nella tua pace\mtr@endline
+e vivano sempre nel reciproco amore.
+
+Per Cristo nostro Signore.
+\rispostatutti{Amen.}%
+
+\benanellicommentii
+}
+\newcommand\mtr@benanelliii{%
+\benanellicommenti
+Signore, benedici \cross e santifica l'amore di questi sposi:\mtr@endline
+l'anello che porteranno come simbolo di fedeltà\mtr@endline
+li richiami continuamente al vicendevole amore.
+
+Per Cristo nostro Signore.
+\rispostatutti{Amen.}%
+
+\benanellicommentii
+}
+\newcommand\mtr@benanelliv{%
+\benanellicommenti
+Il Signore benedica \cross questi anelli\mtr@endline
+che vi donate come segno di fedeltà nell'amore.\mtr@endline
+Siano per voi ricordo vivo e lieto di quest'ora di grazia.%
+
+\benanellicommentii
+}
+\newcommand{\mtr@consanellcommento}{%
+Lo sposo, mettendo l’anello al dito anulare della sposa, dice:}
+\newcommand{\mtr@consanellcommenta}{%
+Quindi la sposa, mettendo l'anello al dito anulare dello sposo, dice:}
+\newcommand\mtr@consanell{%
+\consanellcommento
+\sposa, ricevi questo anello,\mtr@endline
+segno del mio amore e della mia fedeltà.\mtr@endline
+Nel nome del Padre e del Figlio\mtr@endline
+e dello Spirito Santo.
+\mtrskip
+
+\consanellcommenta
+\sposo, ricevi questo anello,\mtr@endline
+segno del mio amore e della mia fedeltà.\mtr@endline
+Nel nome del Padre e del Figlio\mtr@endline
+e dello Spirito Santo.%
+}
+
+\newcommand{\mtr@incoronazionecommenti}{%
+Il sacerdote, tenendo le corone nuziali sul capo degli sposi,
+con le braccia incrociate incorona prima lo sposo e poi la sposa dicendo:}
+\newcommand{\mtr@incoronazionecommentii}{%
+E, dopo aver incoronato gli sposi, dice:}
+\newcommand\mtr@incoronazione{%
+\incoronazionecommenti
+\sposo, servo di Dio, ricevi \sposa{} come corona.
+
+\mtrskip
+\sposa, serva di Dio, ricevi \sposo{} come corona.
+
+\mtrskip
+\incoronazionecommentii
+O Signore nostro Dio, incoronali di gloria e di onore.
+}
+
+\newcommand\mtr@fedelintro{%
+Fratelli e sorelle,
+consapevoli del singolare dono di grazia e carità,
+per mezzo del quale Dio ha voluto rendere perfetto
+e consacrare l'amore dei nostri fratelli \sposa{} e \sposo,
+chiediamo al Signore che,
+sostenuti dall'esempio e dall'intercessione dei santi,
+essi custodiscano nella fedeltà il loro vincolo coniugale.
+
+Preghiamo insieme e diciamo: \rispostafedeli
+\rispostatutti{\rispostafedeli}
+\medskip
+\nobreak
+}
+\newcommand{\mtr@fedelistandard}{%
+Per \sposa{} e \sposo: Signore concedi loro il dono della sete. Sete di senso, sete di amore, sete di bellezza e sete di Te, unico sommo Bene; così assetati possano ogni giorno attingere insieme alla sorgente inestinguibile della preghiera, sorgente di intimità e di speranza. Preghiamo.
+\\
+\rispostatutti{\rispostafedeli}
+
+Noi sappiamo che il matrimonio è un dono, non qualcosa di ovvio o scontato.
+Signore aiuta \sposa{} e \sposo,  nel loro rapporto di donna e uomo, aiutali a rispettarsi e a comprendere il punto di vista l’uno  dell’altro, fa che tra loro ci sia tenerezza e onestà, comprensione e pazienza, senza mai dimenticare un pizzico di sano umorismo. La gioia aiuta sempre, siate dunque gioiosi e portatori di gioia. Preghiamo.\\
+\rispostatutti{\rispostafedeli}
+
+Preghiamo e ringraziamo le famiglie di \sposa{} e \sposo, perché l’amore che vi ha portati ad essere prima  marito e moglie poi padre e madre, continui ad essere esempio e stimolo alla nuova famiglia che oggi nasce.   L’amore con cui vi hanno nutrito e cresciuto, sia ogni giorno motivo per scegliervi di nuovo. Gustate sul loro esempio e con l’aiuto di Dio, la bellezza di stare insieme non per l’amore di ieri, ma per l’amore di oggi. Preghiamo.\\
+\rispostatutti{\rispostafedeli}
+
+Per la Chiesa: perché con fiducia, coraggio e perseveranza trasmetta a tutti l’unica verità che salva, in particolare a \sposo{} e \sposa{} perché possano così iniziare il loro nuovo cammino in Cristo. Preghiamo.\\
+\rispostatutti{\rispostafedeli}
+}
+\newcommand{\mtr@introlitaniecomment}{%
+Il sacerdote può invitare i presenti a invocare i santi,
+in particolare quelli che vissero in stato coniugale. Seguono le invocazioni.}
+\newcommand{\mtr@introlitanie}{%
+\introlitaniecomment
+Ora, in comunione con la Chiesa del cielo, invochiamo l'intercessione dei santi.}
+\newcommand{\mtr@postlitaniecomment}{%
+Il sacerdote conclude con la seguente orazione:}
+\newcommand\mtr@litanie{%
+\begin{longtable}{@{}l>{\respfont}l}
+Santa Maria, Madre di Dio, & prega per noi\\
+Santa Maria, Madre della Chiesa, & prega per noi\\
+Santa Maria, Regina della famiglia, & prega per noi\\
+San Giuseppe, Sposo di Maria, & prega per noi\\
+Santi Angeli di Dio, & pregate per noi\\
+Santi Gioacchino e Anna, & pregate per noi\\
+Santi Zaccaria ed Elisabetta, & pregate per noi\\
+San Giovanni Battista, & prega per noi\\
+Santi Pietro e Paolo, & pregate per noi\\
+Santi Apostoli ed Evangelisti, & pregate per noi\\
+Santi Martiri di Cristo, & pregate per noi\\
+Santi Aquila e Priscilla, & pregate per noi\\
+Santi Mario e Marta, & pregate per noi\\
+Santa Monica, & prega per noi\\
+San Paolino, & prega per noi\\
+Santa Brigida, & prega per noi\\
+Santa Rita, & prega per noi\\
+Santa Francesca Romana, & prega per noi\\
+San Tommaso Moro, & prega per noi\\
+Santa Giovanna Beretta Molla, & prega per noi\\
+% San Vigilio, & prega per noi\\
+% San Francesco d'Assisi, & prega per noi\\
+% San Giovanni Bosco, & prega per noi\\
+% San Bruno, & prega per noi\\
+% San Lorenzo, & prega per noi\\
+% Sant'Alberto, & prega per noi\\
+% Santa Rosa, & prega per noi\\
+\personallitania
+\litasposo
+\litasposa
+\litachiesa
+Santi e Sante tutti di Dio, & pregate per noi\\
+\end{longtable}
+
+\postlitaniecomment
+Effondi, Signore, su \sposa{} e \sposo{}
+lo Spirito del tuo amore,
+perché diventino un cuore solo e un'anima sola:
+nulla separi questi sposi che tu hai unito,
+e, ricolmati della tua benedizione, nulla li affligga.
+
+Per Cristo nostro Signore.
+\rispostatutti{Amen.}%
+}
+
+\newcommand{\mtr@credo}{%
+Credo in un solo Dio, \\
+Padre Onnipotente,\\
+creatore del cielo e della terra,\\
+di tutte le cose visibili e invisibili.\\
+Credo in un solo Signore Gesù Cristo\\
+unigenito figlio di Dio\\
+nato dal Padre prima di tutti i secoli.\\
+Dio da Dio, Luce da Luce, Dio vero da Dio vero,\\
+generato, non creato,\\
+della stessa sostanza del Padre.\\
+Per mezzo di Lui tutte le cose sono state create.\\
+Per noi uomini e per la nostra salvezza\\
+discese dal cielo\\
+e per opera dello Spirito Santo\\
+si è incarnato nel seno della Vergine Maria\\
+e si è fatto uomo.\\
+Fu crocifisso per noi sotto Ponzio Pilato,\\
+morì e fu sepolto\\
+e il terzo giorno è resuscitato secondo le Scritture\\
+ed è salito al Cielo e siede alla destra del Padre\\
+e di nuovo verrà nella gloria\\
+per giudicare i vivi e i morti\\
+ed il suo Regno non avrà fine.\\
+Credo nello Spirito Santo che è Signore e dà la vita \\
+e procede dal Padre e dal Figlio\\
+e con il Padre ed il Figlio è adorato e glorificato\\
+e ha parlato per mezzo dei profeti.\\
+Credo la Chiesa una, santa, cattolica e apostolica.
+Professo un solo battesimo\\
+per il perdono dei peccati\\
+e aspetto la resurrezione dei morti\\
+e la vita del mondo che verrà. \rispostatutti{Amen.}
+}
+\newcommand\mtr@offertei{%
+Accogli, Signore, i doni che consacrano l'alleanza nuziale:
+guida e custodisci questa nuova famiglia, che tu stesso
+hai costituito nel tuo sacramento. Per Cristo nostro Signore.
+\rispostatutti{Amen.}
+}
+
+\newcommand\mtr@offerteii{%
+O Dio, Padre di bontà, accogli il pane e il vino,
+che la tua famiglia ti offre con intima gioia, e
+custodisci nel tuo amore \sposa{} e \sposo{} che hai
+unito con il sacramento nuziale. Per Cristo nostro Signore.
+\rispostatutti{Amen.}
+}
+
+\newcommand\mtr@offerteiii{%
+Accogli, Signore, i doni e le preghiere che ti presentiamo
+per \sposa{} e \sposo, uniti nel vincolo santo: questo mistero,
+che esprime la pienezza della tua carità, custodisca
+per sempre il loro amore. Per Cristo nostro Signore.
+\rispostatutti{Amen.}
+}
+
+\newcommand\mtr@presanto{%
+Il Signore sia con voi.
+\rispostatutti{E con il tuo spirito.}
+
+In alto i nostri cuori.
+\rispostatutti{Sono rivolti al Signore.}
+
+Rendiamo grazie al Signore, nostro Dio,
+\rispostatutti{È cosa buona e giusta.}
+
+% È veramente cosa buona e giusta, nostro dovere e fonte di salvezza,
+% rendere grazie sempre e in ogni luogo a te, Signore, Padre santo,
+% Dio onnipotente ed eterno.
+
+% Tu hai dato alla comunità coniugale la dolce legge dell'amore
+% e il vincolo indissolubile della pace, perché l'unione casta
+% e feconda degli sposi accresca il numero dei tuoi figli.
+
+% Con disegno mirabile hai disposto che la nascita di nuove
+% creature allieti l'umana famiglia, e la loro rinascita
+% in Cristo edifichi la tua Chiesa.
+
+% Per questo mistero di salvezza, uniti agli angeli e ai santi,
+% cantiamo insieme l'inno della tua gloria:
+}
+
+\newcommand\mtr@santo{%
+Santo, Santo, Santo il Signore Dio dell'universo. 
+I cieli e la terra sono pieni della tua gloria.\\
+Osanna nell'alto dei cieli.\\
+Benedetto colui che viene nel nome del Signore.\\
+Osanna nell'alto dei cieli.}
+
+
+
+
+
+% NEW
+\newcommand{\pregheucarII}{\mtr@pregheucarII}
+\newcommand\mtr@pregheucarII{% 
+% https://liturgico.chiesacattolica.it/messale-romanoterza-edizione-italiana/
+% PAG. 506 / 1278
+% Il Signore sia con voi.
+% R/. E con il tuo spirito.
+% V/. In alto i nostri cuori.
+% R/. Sono rivolti al Signore.
+% V/. Rendiamo grazie al Signore nostro Dio.
+% R/. È cosa buona e giusta.
+% È veramente cosa buona e giusta,
+% nostro dovere e fonte di salvezza, % *
+% rendere grazie sempre e in ogni luogo % *
+% a te, Padre santo, % +
+% per Gesù Cristo, tuo amatissimo Figlio. % **
+% Egli è la tua parola vivente: % *
+% per mezzo di lui hai creato tutte le cose, %
+% lo hai mandato a noi salvatore e redentore, % *
+% fatto uomo per opera dello Spirito Santo % +
+% e nato dalla Vergine Maria. % **
+% Per compiere la tua volontà %
+% e acquistarti un popolo santo % *
+% egli, nell’ora della passione, %
+% stese le braccia sulla croce, % *
+% morendo distrusse la morte % +
+% e proclamò la risurrezione. % **
+% Per questo mistero di salvezza, % *
+% uniti agli angeli e ai santi, % *
+% cantiamo a una sola voce % +
+% la tua gloria: % **
+%
+% From the original matrita
+% https://github.com/franen/matrita/blob/master/matrita.dtx
+% from line 1768 to line 1781
+È veramente cosa buona e giusta, nostro dovere e fonte di salvezza, 
+rendere grazie sempre e in ogni luogo a te, Signore, Padre santo, 
+Dio onnipotente ed eterno.
+\\
+Tu hai dato alla comunità coniugale la dolce legge dell'amore 
+e il vincolo indissolubile della pace, perché l'unione casta 
+e feconda degli sposi accresca il numero dei tuoi figli.
+\\
+Con disegno mirabile hai disposto che la nascita di nuove 
+creature allieti l'umana famiglia, e la loro rinascita 
+in Cristo edifichi la tua Chiesa.
+\\
+Per questo mistero di salvezza, uniti agli angeli e ai santi, 
+cantiamo insieme l'inno della tua gloria:
+\\ \\
+{\bfseries\santosanto}
+\\ \\
+% PAG. 507 / 1278
+Veramente santo sei tu, o Padre, fonte di ogni santità.
+\\ \\
+Ti preghiamo: santifica questi doni con la rugiada del tuo Spirito
+perché diventino per noi
+il Corpo e \cross il Sangue del Signore nostro Gesù Cristo.
+%
+Egli, consegnandosi volontariamente alla passione,
+prese il pane, rese grazie,
+lo spezzò, lo diede ai suoi discepoli e disse: 
+%
+\\ \\
+{\consacrazfont 
+Prendete, e mangiatene tutti:\\
+questo è il mio Corpo\\
+offerto in sacrificio per voi.\\}
+\\
+Allo stesso modo, dopo aver cenato,
+prese il calice,
+di nuovo ti rese grazie, lo diede ai suoi discepoli e disse:
+%
+\\ \\ 
+{\consacrazfont 
+Prendete, e bevetene tutti:\\
+questo è il calice del mio Sangue,\\
+per la nuova ed eterna alleanza,\\
+versato per voi e per tutti\\
+in remissione dei peccati.\\
+Fate questo in memoria di me.\\}
+%
+% \\ \\ this space removed in the italian version
+Mistero della fede.
+\\
+\misterofede
+Celebrando il memoriale
+della morte e risurrezione del tuo Figlio,
+ti offriamo, Padre,
+il pane della vita e il calice della salvezza,
+e ti rendiamo grazie
+perché ci hai resi degni di stare alla tua presenza
+a compiere il servizio sacerdotale.
+Ti preghiamo umilmente:
+per la comunione
+al Corpo e al Sangue di Cristo,
+lo Spirito Santo ci riunisca in un solo corpo.
+Ricordati, Padre, della tua Chiesa
+diffusa su tutta la terra:
+% %%%%%%% Domenica
+% e qui convocata
+% nel giorno in cui Cristo ha vinto la morte
+% e ci ha resi partecipi della sua vita immortale:
+% %%%%%%% Domenica
+rendila perfetta nell’amore 
+in unione con il nostro papa \nomepapa, % ±.,
+il nostro vescovo \nomevescovo, % ±.
+i presbiteri e i diaconi. % †
+% %%%%%%% Per il Matrimonio
+Ricordati anche di \sposa{} e \sposo,
+che hai voluto condurre al giorno delle nozze:
+per tua grazia vivano nell’amore vicendevole e nella pace.
+% %%%%%%% Per il Matrimonio
+Ricordati anche dei nostri fratelli e sorelle
+che si sono addormentati
+nella speranza della risurrezione
+e, nella tua misericordia, di tutti i defunti:
+ammettili alla luce del tuo volto.
+Di noi tutti abbi misericordia,
+donaci di aver parte alla vita eterna,
+insieme con la beata Maria, Vergine e Madre di Dio,
+san Giuseppe, suo sposo,
+gli apostoli, 
+% [san ±.: santo del giorno o patrono]
+% Sant’Emilio 
+e tutti i santi
+che in ogni tempo ti furono graditi,
+e in Gesù Cristo tuo Figlio
+canteremo la tua lode e la tua gloria.
+\\
+Per Cristo, con Cristo e in Cristo,
+a te, Dio Padre onnipotente,
+nell’unità dello Spirito Santo,
+ogni onore e gloria
+per tutti i secoli dei secoli.
+\\
+\rispostatutti{Amen.\\}
+}
+
+
+
+
+
+
+
+
+\newcommand\mtr@pregheucar{%
+Padre veramente santo, a te la lode da ogni creatura.
+Per mezzo di Gesù Cristo, tuo Figlio e nostro Signore,
+nella potenza dello Spirito Santo fai vivere e santifichi
+l'universo, e continui a radunare intorno a te un popolo,
+che da un confine all'altro della terra offra al tuo nome
+il sacrificio perfetto.
+
+Ora ti preghiamo umilmente: manda il tuo Spirito
+a santificare i doni che ti offriamo, perché diventino
+il corpo e \cross il sangue di Gesù Cristo, tuo Figlio
+e nostro Signore, che ci ha comandato di celebrare questi misteri.
+
+Nella notte in cui fu tradito, egli prese il pane,
+ti rese grazie con la preghiera di benedizione, lo spezzò,
+lo diede ai suoi discepoli, e disse:
+
+\mtrskip
+{\consacrazfont Prendete, e mangiatene tutti:\\ questo è il mio Corpo\\
+offerto in sacrificio per voi.\par}
+\mtrskip
+Dopo la cena, allo stesso modo, prese il calice,
+ti rese grazie con la preghiera di benedizione,
+lo diede ai suoi discepoli, e disse:
+
+\mtrskip
+{\consacrazfont Prendete, e bevetene tutti:\\ questo è il calice del mio Sangue \\
+per la nuova ed eterna alleanza,\\ versato per voi e per tutti \\
+in remissione dei peccati.\\ Fate questo in memoria di me.\par}
+
+\mtrskip
+Mistero della fede.
+}
+
+\newcommand\mtr@mistfedei{%
+Annunciamo la tua morte, Signore,\\
+proclamiamo la tua risurrezione,\\
+nell’attesa della tua venuta.
+}
+
+\newcommand\mtr@mistfedeii{%
+Ogni volta che mangiamo di questo pane\\ e beviamo a questo calice\\
+annunziamo la tua morte, Signore,\\ nell'attesa della tua venuta.
+}
+\newcommand\mtr@mistfedeiii{%
+Tu ci hai redenti con la tua croce e la tua risurrezione:
+salvaci, o Salvatore del mondo.}
+
+\newcommand\mtr@orazioneucar{%
+Celebrando il memoriale del tuo Figlio, morto per la nostra salvezza,
+gloriosamente risorto e asceso al cielo, nell'attesa
+della sua venuta ti offriamo, Padre, in rendimento
+di grazie questo sacrificio vivo e santo.
+
+Guarda con amore e riconosci nell'offerta della tua Chiesa,
+la vittima immolata per la nostra redenzione; e a noi,
+che ci nutriamo del corpo e sangue del tuo Figlio,
+dona la pienezza dello Spirito Santo perché diventiamo
+in Cristo un solo corpo e un solo spirito.
+
+Egli faccia di noi un sacrificio perenne a te gradito,
+perché possiamo ottenere il regno promesso insieme con
+i tuoi eletti: con la beata Maria, Vergine e Madre di Dio,
+con san Giuseppe suo Sposo, con i tuoi santi apostoli,
+i gloriosi martiri\@miosanto{} e tutti i santi, nostri
+intercessori presso di te.
+
+Per questo sacrificio di riconciliazione dona, Padre, pace
+e salvezza al mondo intero. Conferma nella fede e nell'amore
+la tua Chiesa pellegrina sulla terra: il tuo servo e nostro
+Papa \nomepapa, il nostro Vescovo \nomevescovo, il collegio
+episcopale, tutto il clero e il popolo che tu hai redento.
+
+Assisti i tuoi figli \sposa{} e \sposo, che in Cristo hanno
+costituito una nuova famiglia, piccola Chiesa e sacramento
+del tuo amore, perché la grazia di questo giorno si estenda
+a tutta la loro vita.
+
+Ascolta la preghiera di questa famiglia, che hai convocato
+alla tua presenza. Ricongiungi a te, Padre misericordioso,
+tutti i tuoi figli ovunque dispersi. Accogli nel tuo regno
+i nostri fratelli defunti e tutti i giusti che, in pace con
+te, hanno lasciato questo mondo; concedi anche a noi di
+ritrovarci insieme a godere per sempre della tua gloria,
+in Cristo, nostro Signore, per mezzo del quale tu, o Dio,
+doni al mondo ogni bene.
+
+Per Cristo, con Cristo e in Cristo a te, Dio Padre onnipotente,
+nell'unità dello Spirito Santo ogni onore e gloria per tutti
+i secoli dei secoli.
+\rispostatutti{Amen.}
+}
+\newcommand{\mtr@benedizsposcommenti}{%
+Il sacerdote, a mani giunte, invita i presenti a pregare con queste o simili parole:}
+\newcommand{\mtr@benedizsposcommentii}{%
+Tutti pregano per breve tempo in silenzio.
+Poi il sacerdote, tenendo stese le mani sugli sposi, continua:}
+\newcommand\mtr@benedizsposi{%
+\benedizsposcommenti
+Fratelli e sorelle, invochiamo con fiducia il Signore,
+perché effonda la sua grazia e la sua benedizione su questi sposi
+che celebrano in Cristo il loro Matrimonio:
+egli che li ha uniti nel patto santo per la comunione
+al corpo e al sangue di Cristo li confermi nel reciproco amore.
+
+\benedizsposcommentii
+O Dio, con la tua onnipotenza
+hai creato dal nulla tutte le cose
+e nell'ordine primordiale dell'universo
+hai formato l'uomo e la donna a tua immagine,
+donandoli l'uno all'altra
+come sostegno inseparabile,
+perché siano non più due,
+ma una sola carne;
+così hai insegnato
+che non è mai lecito separare
+ciò che tu hai costituito in unità.
+
+O Dio, in un mistero così grande
+hai consacrato l'unione degli sposi
+e hai reso il patto coniugale
+sacramento di Cristo e della Chiesa.
+
+O Dio, in te, la donna e l'uomo si uniscono,
+e la prima comunità umana, la famiglia,
+riceve in dono quella benedizione
+che nulla poté cancellare,
+né il peccato originale
+né le acque del diluvio.
+
+Guarda ora con bontà questi tuoi figli
+che, uniti nel vincolo del Matrimonio,
+chiedono l'aiuto della tua benedizione:
+effondi su di loro la grazia dello Spirito Santo
+perché, con la forza del tuo amore
+diffuso nei loro cuori,
+rimangano fedeli al patto coniugale.
+
+In questa tua figlia \sposa{}
+dimori il dono dell'amore e della pace
+e sappia imitare le donne sante
+lodate dalla Scrittura.
+\sposo, suo sposo,
+viva con lei in piena comunione,
+la riconosca partecipe dello stesso dono di grazia,
+la onori come uguale nella dignità,
+la ami sempre con quell'amore
+con il quale Cristo ha amato la sua Chiesa.
+
+Ti preghiamo, Signore,
+affinché questi tuoi figli rimangano uniti nella fede
+e nell'obbedienza ai tuoi comandamenti;
+fedeli a un solo amore,
+siano esemplari per integrità di vita;
+sostenuti dalla forza del Vangelo,
+diano a tutti buona testimonianza di Cristo.
+\ifmtr@figli Sia feconda la loro unione,
+diventino genitori saggi e forti
+e insieme possano vedere i figli dei loro figli.\fi\
+E dopo una vita lunga e serena
+giungano alla beatitudine eterna del regno dei cieli.
+
+Per Cristo nostro Signore.
+\rispostatutti{Amen.}%
+}
+\newcommand\mtr@benedizsposii{%
+\benedizsposcommenti
+Preghiamo il Signore per questi sposi,
+che all'inizio della vita matrimoniale
+si accostano all'altare perché con la comunione
+al corpo e sangue di Cristo siano confermati
+nel reciproco amore.
+
+\benedizsposcommentii
+Padre santo, tu hai fatto l'uomo a tua immagine:
+maschio e femmina li hai creati,
+perché l'uomo e la donna,
+uniti nel corpo e nello spirito,
+fossero collaboratori della tua creazione.
+
+O Dio, per rivelare il disegno del tuo amore
+hai voluto adombrare
+nella comunione di vita degli sposi
+quel patto di alleanza che hai stabilito con il tuo popolo,
+perché, nell'unione coniugale dei tuoi fedeli,
+realizzata pienamente nel sacramento,
+si manifesti il mistero nuziale di Cristo e della Chiesa.
+
+O Dio, stendi la tua mano su \sposa{} e \sposo{}
+ed effondi nei loro cuori la forza dello Spirito Santo.
+Fa', o Signore, che, nell'unione da te consacrata,
+condividano i doni del tuo amore
+e, diventando l'uno per l'altro segno della tua presenza,
+siano un cuore solo e un'anima sola.
+Dona loro, Signore,
+di sostenere anche con le opere la casa che oggi edificano.
+\ifmtr@figli Alla scuola del Vangelo preparino i loro figli
+a diventare membri della tua Chiesa.\fi
+
+Dona a questa sposa \sposa{} benedizione su benedizione:
+perché, come moglie\ifmtr@figli\ e madre\fi,
+diffonda la gioia nella casa
+e la illumini con generosità e dolcezza.
+Guarda con paterna bontà \sposo, suo sposo:
+perché, forte della tua benedizione,
+adempia con fedeltà la sua missione di marito\ifmtr@figli\ e di padre\fi.\
+
+Padre santo, concedi a questi tuoi figli
+che, uniti davanti a te come sposi,
+comunicano alla tua mensa,
+di partecipare insieme con gioia al banchetto del cielo.
+
+Per Cristo nostro Signore.
+\rispostatutti{Amen.}%
+}
+\newcommand\mtr@benedizsposiii{%
+\benedizsposcommenti
+Fratelli e sorelle,
+raccolti in preghiera,
+invochiamo su questi sposi, \sposa{} e \sposo,
+la benedizione di Dio:
+egli, che oggi li ricolma di grazia
+con il sacramento del Matrimonio,
+li accompagni sempre con la sua protezione.
+
+\benedizsposcommentii
+Padre santo, creatore dell'universo,
+che hai formato l'uomo e la donna a tua immagine
+e hai voluto benedire la loro unione,
+ti preghiamo umilmente per questi tuoi figli,
+che oggi si uniscono con il sacramento nuziale.
+
+\textinvoc{Ti lodiamo, Signore, e ti benediciamo}
+\rispostatutti{Eterno è il tuo amore per noi}
+
+Scenda, o Signore, su questi sposi \sposa{} e \sposo{}
+la ricchezza delle tue benedizioni,
+e la forza del tuo Santo Spirito
+infiammi dall'alto i loro cuori,
+perché nel dono reciproco dell'amore
+allietino di figli la loro famiglia e la comunità ecclesiale.
+
+\textinvoc{Ti supplichiamo, Signore}
+\rispostatutti{Ascolta la nostra preghiera}
+
+Ti lodino, Signore, nella gioia,
+ti cerchino nella sofferenza;
+godano del tuo sostegno nella fatica
+e del tuo conforto nella necessità;
+ti preghino nella santa assemblea,
+siano tuoi testimoni nel mondo.
+Vivano a lungo nella prosperità e nella pace
+e, con tutti gli amici che ora li circondano,
+giungano alla felicità del tuo regno.
+
+Per Cristo nostro Signore.
+\rispostatutti{ Amen.}%
+}
+
+\newcommand\mtr@benedizsposiv{%
+\benedizsposcommenti
+Fratelli e sorelle,
+invochiamo su questi sposi, \sposa{} e \sposo,
+la benedizione di Dio:
+egli, che oggi li ricolma di grazia
+con il sacramento del Matrimonio,
+li accompagni sempre con la sua protezione.
+
+\benedizsposcommentii
+O Dio, Padre di ogni bontà,
+nel tuo disegno d'amore hai creato l'uomo e la donna
+perché, nella reciproca dedizione,
+con tenerezza e fecondità vivessero lieti nella comunione.
+
+\textinvoc{Ti lodiamo, Signore, e ti benediciamo}
+\rispostatutti{Eterno è il tuo amore per noi}
+
+Quando venne la pienezza dei tempi
+hai mandato il tuo Figlio, nato da donna.
+A Nazareth,
+gustando le gioie
+e condividendo le fatiche di ogni famiglia umana,
+è cresciuto in sapienza e grazia.
+A Cana di Galilea,
+cambiando l'acqua in vino,
+è divenuto presenza di gioia nella vita degli sposi.
+Nella croce,
+si è abbassato fin nell'estrema povertà
+dell'umana condizione,
+e tu, o Padre, hai rivelato un amore
+sconosciuto ai nostri occhi,
+un amore disposto a donarsi senza chiedere nulla in cambio.
+
+\textinvoc{Ti lodiamo, Signore, e ti benediciamo}
+\rispostatutti{Eterno è il tuo amore per noi}
+
+Con l'effusione dello Spirito del Risorto
+hai concesso alla Chiesa
+di accogliere nel tempo la tua grazia
+e di santificare i giorni di ogni uomo.
+
+\textinvoc{Ti lodiamo, Signore, e ti benediciamo}
+\rispostatutti{Eterno è il tuo amore per noi}
+
+Ora, Padre, guarda \sposa{} e \sposo,
+che si affidano a te:
+trasfigura quest'opera che hai iniziato in loro
+e rendila segno della tua carità.
+Scenda la tua benedizione su questi sposi,
+perché, segnati col fuoco dello Spirito,
+diventino Vangelo vivo tra gli uomini.
+\ifmtr@figli Siano guide sagge e forti dei figli
+che allieteranno la loro famiglia e la comunità.\fi
+
+\textinvoc{Ti supplichiamo, Signore}
+\rispostatutti{Ascolta la nostra preghiera}
+
+Siano lieti nella speranza,
+forti nella tribolazione,
+perseveranti nella preghiera,
+solleciti per le necessità dei fratelli,
+premurosi nell'ospitalità.
+Non rendano a nessuno male per male,
+benedicano e non maledicano,
+vivano a lungo e in pace con tutti.
+
+\textinvoc{Ti supplichiamo, Signore}
+\rispostatutti{Ascolta la nostra preghiera}
+
+Il loro amore, Padre,
+sia seme del tuo regno.
+Custodiscano nel cuore una profonda nostalgia di te
+fino al giorno in cui potranno,
+con i loro cari, lodare in eterno il tuo nome.
+
+Per Cristo nostro Signore.
+\rispostatutti{Amen.}%
+}
+
+% NEW PART
+\newcommand{\riticomunionePREbenedizionenuziale}{\mtr@riticomunionePREbn}
+\newcommand\mtr@riticomunionePREbn{%
+Obbedienti alla parola del Salvatore e formati al suo divino insegnamento, osiamo dire:
+\\ \\
+{\bfseries Padre nostro che sei nei cieli, sia santificato il tuo nome, venga il tuo regno, sia fatta la tua volontà come in cielo così in terra. Dacci oggi il nostro pane quotidiano, e rimetti a noi i nostri debiti come anche noi li rimettiamo ai nostri debitori, e non abbandonarci alla tentazione, ma liberaci dal male.}
+}
+
+
+\newcommand{\riticomunionePOSTbenedizionenuziale}{\mtr@riticomunionePOSTbn}
+\newcommand\mtr@riticomunionePOSTbn{%
+Signore Gesù Cristo, che hai detto ai tuoi apostoli: “Vi lascio la pace, vi do la mia pace”, non guardare ai nostri peccati, ma alla fede della tua Chiesa, e donale unità e pace secondo la tua volontà. Tu che vivi e regni nei secoli dei secoli.\\
+\rispostatutti{Amen.\\}
+La pace e la comunione del Signore siano sempre con voi.\\
+\rispostatutti{E con il tuo spirito.\\}
+\rispostatutti{Agnello di Dio, che togli i peccati del mondo, abbi pietà di noi. Agnello di Dio, che togli i peccati del mondo, abbi pietà di noi. Agnello di Dio, che togli i peccati del mondo, dona a noi la pace.\\}
+Ecco l’Agnello di Dio, ecco colui che toglie i peccati del mondo. Beati gli invitati alla cena dell’Agnello.\\
+\rispostatutti{O Signore, non son degno di partecipare alla tua mensa: ma dì soltanto una parola e io sarò salvato.\\}
+}
+
+% NEW PART
+% http://www.liturgia.maranatha.it/Matrimonio/t1/5page.htm
+% Canto al Vangelo  Cf 1 Gv 4, 8.11
+\newcommand{\alleluia}{\mtr@alleluia}
+\newcommand\mtr@alleluia{%
+\rispostatutti{Alleluia, Alleluia}
+Dio è amore;
+amiamoci a vicenda,
+come  lui ha amato noi.\\
+\rispostatutti{Alleluia, Alleluia}
+}
+
+
+
+
+\newcommand\mtr@preghcomui{%
+O Signore, per questo sacrificio di salvezza,
+accompagna con la tua provvidenza la nuova famiglia
+che hai istituito: fa' che \sposa{} e \sposo, uniti
+nel vincolo santo e nutriti con l'unico pane e l'unico
+calice vivano concordi nel tuo amore.
+Per Cristo nostro Signore. \rispostatutti{Amen.}
+}
+\newcommand\mtr@preghcomuii{%
+O Padre, che ci hai accolti alla tua mensa, concedi a
+questa nuova famiglia, consacrata dalla tua benedizione,
+di essere sempre fedele a te e di testimoniare il tuo
+amore nella comunità dei fratelli. Per Cristo nostro
+Signore. \rispostatutti{Amen.}
+}
+
+\newcommand\mtr@preghcomuiii{%
+O Signore, la grazia del sacramento nuziale cresca di
+giorno in giorno nella vita di questi sposi, e l'Eucaristia
+che abbiamo offerto e ricevuto ci edifichi tutti nel tuo amore.
+Per Cristo nostro Signore. \rispostatutti{Amen.}
+}
+
+% benesole
+\newcommand{\mtr@prebenedizfin}{%
+Il Signore sia con voi. \rispostatutti{E con il tuo spirito.}}
+\newcommand{\mtr@benedizfincomment}{%
+Il sacerdote benedice gli sposi e il popolo dicendo:}
+\newcommand\mtr@bendizfini{%
+\benedizfincomment
+Dio, eterno Padre,\mtr@endline
+vi conservi uniti nel reciproco amore;\mtr@endline
+la pace di Cristo abiti in voi\mtr@endline
+e rimanga sempre nella vostra casa.
+\rispostatutti{Amen.}
+
+Abbiate benedizione nei figli,\mtr@endline
+conforto dagli amici, vera pace con tutti.
+\rispostatutti{Amen.}
+
+Siate nel mondo testimoni dell'amore di Dio\mtr@endline
+perché i poveri e i sofferenti,\mtr@endline
+che avranno sperimentato la vostra carità,\mtr@endline
+vi accolgano grati un giorno nella casa del Padre.
+\rispostatutti{Amen.}
+
+E su voi tutti,\mtr@endline
+che avete partecipato a questa liturgia nuziale,\mtr@endline
+scenda la benedizione di Dio onnipotente,\mtr@endline
+Padre e Figlio \cross e Spirito Santo.\\ %added
+\rispostatutti{Amen.}%
+}
+\newcommand\mtr@bendizfinii{%
+\benedizfincomment
+Dio, Padre onnipotente,\mtr@endline vi comunichi la sua gioia\mtr@endline
+e vi benedica con il dono dei figli.
+\rispostatutti{Amen.}
+
+L'unigenito Figlio di Dio vi sia vicino e vi assista\mtr@endline
+nell'ora della serenità e nell'ora della prova.
+\rispostatutti{Amen.}
+
+Lo Spirito Santo di Dio\mtr@endline
+effonda sempre il suo amore nei vostri cuori.
+\rispostatutti{Amen.}
+
+E su voi tutti,\mtr@endline
+che avete partecipato a questa liturgia nuziale,\mtr@endline
+scenda la benedizione di Dio onnipotente,\mtr@endline
+Padre e Figlio \cross e Spirito Santo.
+\rispostatutti{Amen.}%
+}
+\newcommand\mtr@bendizfiniii{%
+\benedizfincomment
+Il Signore Gesù,\mtr@endline
+che santificò le nozze di Cana,\mtr@endline
+benedica voi, i vostri parenti e i vostri amici.
+\rispostatutti{Amen.}
+
+Cristo, che ha amato la sua Chiesa sino alla fine,\mtr@endline
+effonda continuamente nei vostri cuori\mtr@endline
+il suo stesso amore.
+\rispostatutti{Amen.}
+
+Il Signore conceda a voi,\mtr@endline
+che testimoniate la fede nella sua risurrezione,\mtr@endline
+di attendere nella gioia che si compia la beata speranza.
+\rispostatutti{Amen.}
+
+E su voi tutti,\mtr@endline
+che avete partecipato a questa liturgia nuziale,\mtr@endline
+scenda la benedizione di Dio onnipotente,\mtr@endline
+Padre e Figlio \cross e Spirito Santo.
+\rispostatutti{Amen.}%
+}
+\newcommand{\mtr@congedocomment}{%
+L'assemblea viene congedata con queste o simili parole,
+che esprimano l'invito alla missione
+e alla testimonianza sponsale nella comunità.}
+\newcommand\mtr@congedo{%
+\congedocomment
+Nella Chiesa e nel mondo siate testimoni\mtr@endline
+del dono della vita e dell'amore che avete celebrato.
+
+Andate in pace.
+\rispostatutti{Rendiamo grazie a Dio.}%
+}
+\newcommand{\mtr@articolicomment}{%
+A norma delle vigenti disposizioni concordatarie,
+si da lettura degli articoli del codice civile
+concernenti i diritti e i doveri dei coniugi.}
+\newcommand\mtr@articoli{%
+\articolicomment
+Carissimi \sposa{} e \sposo, avete celebrato il sacramento
+del matrimonio manifestando il vostro consenso dinanzi a me
+e ai testimoni. Oltre la grazia divina e gli effetti stabiliti
+dai sacri Canoni, il vostro matrimonio produce anche gli
+effetti civili secondo le leggi dello Stato.
+
+Vi do quindi lettura degli articoli del Codice civile riguardanti
+i diritti e i doveri dei coniugi che voi siete tenuti a rispettare
+e osservare:
+
+\mtrskip
+Art. 143: Con il matrimonio il marito e la moglie acquistano
+gli stessi diritti e assumono i medesimi doveri.
+Dal matrimonio deriva l'obbligo reciproco alla fedeltà,
+all'assistenza morale e materiale, alla collaborazione
+nell'interesse della famiglia e alla coabitazione. Entrambi
+i coniugi sono tenuti, ciascuno in relazione alle proprie
+sostanze e alla propria capacità di lavoro professionale o
+casalingo, a contribuire ai bisogni della famiglia.
+
+\mtrskip
+Art. 144: I coniugi concordano tra loro l'indirizzo della
+vita familiare e fissano la residenza della famiglia secondo
+le esigenze di entrambi e quelle preminenti della famiglia
+stessa. A ciascuno dei coniugi spetta il potere di attuare
+l'indirizzo concordato.
+\mtrskip
+
+Art. 147: Il matrimonio impone ad ambedue i coniugi l'obbligo
+di mantenere, istruire ed educare la prole tenendo conto delle
+capacità, dell'inclinazione naturale e delle aspirazioni dei figli.
+}
+
+%% 
+%% Copyright 2012 Francesco Endrici <francescoendrici at gmail dot com>
+%% 
+%% Distributable under the LaTeX Project Public License,
+%% version 1.3c or higher. The latest version of
+%% this license is at: http://www.latex-project.org/lppl.txt
+%% 
+%% This work is "author-maintained"
+%% 
+%% This work consists of this file matrita.dtx, a README file,
+%% the derived files matrita.sty and matrita.pdf and the example file matrimonio.tex.
+%% 
+%%
+%% End of file `matrita.sty'.
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%% ITALIAN SONGS %%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+% NEW PART
+\newcommand{\cantoIntro}{\mtr@cantoIntroITA}
+\newcommand\mtr@cantoIntroITA{%
+% \settowidth{\versewidth}{Il giorno al giorno ne affida il messaggio,}
+% \canztitle{\textcolor{crosscolor}{I cieli narrano}}
+% \textbf{} 
+% \vspace{-2\baselineskip}
+% \\ \\
+% {\large\textbf{\textcolor{crosscolor}{I cieli narrano}}}
+{\intestfont{I Cieli Narrano}}
+\\ \\[1em]
+\textbf{\textcolor{crosscolor}{Rit.}}\textit{
+I cieli narrano la gloria di dio\\
+e il firmamento annunzia l’opera sua. \\
+Alleluja, alleluja, alleluja, alleluja.
+}
+\\ \\
+Il giorno al giorno ne affida il messaggio\\
+la notte alla notte ne trasmette notizia\\
+non è linguaggio, non sono parole\\
+di cui non si oda il suono.
+\\ \\
+\textbf{\textcolor{crosscolor}{Rit.}} \textit{I cieli narrano la gloria ...}
+\\ \\
+Là pose una tenda per il sole che sorge\\
+è come uno sposo dalla stanza  nuziale\\
+esulta come un prode che corre\\
+con gioia la sua strada.
+\\ \\
+\textbf{\textcolor{crosscolor}{Rit.}} \textit{I cieli narrano la gloria ...}
+}
+
+
+
+
+
+% NEW PART
+\newcommand{\cantoLiturgiaMatrimonio}{\mtr@cantoLitMatITA}
+\newcommand\mtr@cantoLitMatITA{%
+% {\large\textbf{\textcolor{crosscolor}{Spirito di Dio}}}
+% \\ \\
+{\intestfont{Spirito di Dio}}
+\\ \\[1em]
+Spirito di Dio riempimi\\
+Spirito di Dio battezzami\\
+Spirito di Dio consacrami\\
+Vieni ad abitare dentro me.
+\\ \\
+Spirito di Dio guariscimi\\
+Spirito di Dio rinnovami\\
+Spirito di Dio consacrami\\
+Vieni ad abitare dentro me.
+\\ \\
+Spirito di Dio riempici\\
+Spirito di Dio battezzaci\\
+Spirito di Dio riempici\\
+Spirito di Dio battezzaci\\
+Spirito di Dio consacraci\\
+Vieni ad abitare dentro noi.\\
+Vieni ad abitare dentro noi.
+}
+
+
+
+
+
+
+
+% NEW PART
+\newcommand{\cantoLiturgiaEucaristica}{\mtr@cantoLitEucITA}
+\newcommand\mtr@cantoLitEucITA{%
+% {\large\textbf{\textcolor{crosscolor}{Pane di Vita}}}
+% \\ \\
+{\intestfont{Pane di Vita}}
+\\ \\[1em]
+Pane di vita sei\\
+Spezzato per tutti noi\\
+Chi ne mangia per sempre in te vivrà.
+\\ \\
+Veniamo al tuo santo altare\\
+Mensa del tuo amore\\
+Come pane vieni in mezzo a noi.
+\\ \\
+\textbf{\textcolor{crosscolor}{Rit.}}\textit{
+Il tuo corpo ci sazierà\\
+Il tuo sangue ci salverà\\
+Perché signor tu sei morto per amore\\
+E ti offri oggi per noi.
+}
+\\ \\
+\textbf{\textcolor{crosscolor}{Rit.}} \textit{Il tuo corpo ci sazierà ...}
+\\ \\
+Fonte di vita sei\\
+Immensa carità\\
+Il tuo sangue ci dona l'eternità.
+\\ \\
+Veniamo al tuo santo altare\\
+Mensa del tuo amore\\
+Come vino vieni in mezzo a noi.
+\\ \\
+\textbf{\textcolor{crosscolor}{Rit.}} \textit{Il tuo corpo ci sazierà ...}
+\\ \\
+\textbf{\textcolor{crosscolor}{Rit.}} \textit{Il tuo corpo ci sazierà ...}
+\\ \\
+E ti offri oggi per noi.
+}
+
+
+
+
+
+
+
+% NEW PART
+\newcommand{\cantoComunione}{\mtr@cantoComITA}
+\newcommand\mtr@cantoComITA{%
+{\intestfont{Come Fuoco Vivo}}
+\\ \\[1em]
+\textbf{\textcolor{crosscolor}{Rit.}}\textit{
+Come fuoco vivo si accende in noi\\
+Un'immensa felicità\\
+Che mai più nessuno ci toglierà\\
+Perché Tu sei ritornato.\\
+Chi potrà tacere, da ora in poi,\\
+Che sei Tu in cammino con noi.\\
+Che la morte è vinta per sempre,\\
+Che ci hai ridonato la vita.
+}
+\\ \\
+Spezzi il pane davanti a noi\\
+Mentre il sole è al tramonto:\\
+Ora gli occhi ti vedono,\\
+Sei Tu! Resta con noi.
+\\ \\
+\textbf{\textcolor{crosscolor}{Rit.}} \textit{Come fuoco vivo si accende in noi ...}
+\\ \\
+E per sempre ti mostrerai\\
+In quel gesto d'amore:\\
+Mani che ancora spezzano\\
+Pane d'eternità.
+\\ \\
+\textbf{\textcolor{crosscolor}{Rit.}} \textit{Come fuoco vivo si accende in noi ...}
+}
+
+
+
+
+
+% NEW PART
+\newcommand{\cantoFinale}{\mtr@cantoFinITA}
+\newcommand\mtr@cantoFinITA{%
+{\intestfont{Popoli tutti acclamate}}
+\\ \\[1em]
+\textbf{\textcolor{crosscolor}{Rit.}}\textit{
+Mio Dio, Signore, nulla è pari a te\\
+Ora e per sempre, voglio lodare\\
+Il tuo grande amor per me.
+\\ \\
+Mia roccia tu sei, pace e conforto mi dai\\
+Con tutto il cuore e le mie forze\\
+Sempre io ti adorerò.
+\\ \\
+Popoli tutti acclamate al Signore\\
+Gloria e potenza cantiamo al re\\
+Mari e monti si prostrino a te\\
+Al tuo nome, o Signore.
+\\ \\
+Canto di gioia per quello che fai\\
+Per sempre Signore con te resterò\\
+Non c'è promessa, non c'è fedeltà che in te.
+}
+\\ \\
+\textbf{\textcolor{crosscolor}{Rit.}} \textit{Mio Dio, Signore, nulla è pari a te ...}
+\\ \\
+Popoli tutti acclamate al Signore\\
+Gloria e potenza cantiamo al re\\
+Mari e monti si prostrino a te\\
+Al tuo nome, o Signore.
+\\ \\
+Canto di gioia per quello che fai\\
+Per sempre Signore con te resterò\\
+Non c'è promessa, non c'è fedeltà che in te\\
+Non c'è promessa, non c'è fedeltà che in te\\
+Non c'è promessa, non c'è fedeltà che in te.
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%% 2nd LANGUAGE SONGS %%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+% NEW PART
+\newcommand{\cantoIntroFIN}{\mtr@cantoIntroFIN}
+\newcommand\mtr@cantoIntroFIN{%
+{\intestfont{Taivas Kertoo}}
+\\ \\[1em]
+\textbf{\textcolor{crosscolor}{Kert.}}\textit{
+Taivas kertoo Jumalan kunniaa\\
+ja taivaankansi julistaa Hänen työtään.\\
+Halleluja, halleluja, halleluja, halleluja.
+}
+\\ \\
+Päivä päivälle sanoman uskoo\\
+Yö yölle uutisen välittää\\
+Se ei ole kieltä, se ei ole sanoja\\
+Jonka ääntä ei kuulu.
+\\ \\
+\textbf{\textcolor{crosscolor}{Kert.}} \textit{Taivas kertoo Jumalan kunniaa ...}
+\\ \\
+Sinne hän pystytti teltan nousevalle auringolle\\
+Hän on kuin sulhanen häähuoneesta\\
+Riemuitsee kuin rohkea, joka juoksee\\
+Ilolla hänen tietään.
+\\ \\
+\textbf{\textcolor{crosscolor}{Kert.}} \textit{Taivas kertoo Jumalan kunniaa ...}
+}
+
+
+
+
+
+% NEW PART
+\newcommand{\cantoLiturgiaMatrimonioFIN}{\mtr@cantoLitMatFIN}
+\newcommand\mtr@cantoLitMatFIN{%
+% {\large\textbf{\textcolor{crosscolor}{Spirito di Dio}}}
+% \\ \\
+{\intestfont{Jumalan Henki}}
+\\ \\[1em]
+Jumalan Henki täytä minut\\
+Jumalan Henki kasta minut\\
+Jumalan Henki siunaa minut\\
+Tule asumaan sisälleni.
+\\ \\
+Jumalan Henki paranna minut\\
+Jumalan Henki uudista minut\\
+Jumalan Henki siunaa minut\\
+Tule asumaan sisälleni.
+\\ \\
+Jumalan Henki täytä meidät\\
+Jumalan Henki kasta meidät\\
+Jumalan Henki täytä meidät\\
+Jumalan Henki kasta meidät\\
+Jumalan Henki siunaa meidät\\
+Tule asumaan sisällemme\\
+Tule asumaan sisällemme.
+}
+
+
+
+
+
+
+
+% NEW PART
+\newcommand{\cantoLiturgiaEucaristicaFIN}{\mtr@cantoLitEucFIN}
+\newcommand\mtr@cantoLitEucFIN{%
+% {\large\textbf{\textcolor{crosscolor}{Pane di Vita}}}
+% \\ \\
+{\intestfont{Elämän Leipä}}
+\\ \\[1em]
+Olet elämän leipä\\
+Meille kaikille murrettu\\
+Joka syö tätä leipää, elää Sinussa ikuisesti.
+\\ \\
+Tulemme pyhälle alttarillesi\\
+Rakkautesi pöytään\\
+Tule keskuuteemme kuten leipä.
+\\ \\
+\textbf{\textcolor{crosscolor}{Kert.}}\textit{
+Ruumiisi täyttää meidät\\
+Veresi pelastaa meidät\\
+Sillä Herra, kuolit rakkauden vuoksi\\
+Ja tänään tarjoat itsesi meille.
+}
+\\ \\
+\textbf{\textcolor{crosscolor}{Kert.}} \textit{Ruumiisi täyttää meidät ...}
+\\ \\
+Olet elämän lähde\\
+Suunnaton armo\\
+Veresi antaa meille iankaikkisuuden.
+\\ \\
+Tulemme pyhälle alttarillesi\\
+Rakkautesi pöytään\\
+Tule keskuuteemme kuten viini.
+\\ \\
+\textbf{\textcolor{crosscolor}{Kert.}} \textit{Ruumiisi täyttää meidät ...}
+\\ \\
+\textbf{\textcolor{crosscolor}{Kert.}} \textit{Ruumiisi täyttää meidät ...}
+\\ \\
+Ja tänään tarjoat itsesi meille.
+}
+
+
+
+
+
+
+
+% NEW PART
+\newcommand{\cantoComunioneFIN}{\mtr@cantoComFIN}
+\newcommand\mtr@cantoComFIN{%
+{\intestfont{Kuten Elävä Tuli}}
+\\ \\[1em]
+\textbf{\textcolor{crosscolor}{Kert.}}\textit{
+Kuten elävä tuli, se syttyy meissä\\
+Valtava onni\\
+Jota kukaan ei koskaan ota meiltä pois\\
+Koska olet palannut.\\
+Kuka pystyy olla hiljaa, tästä lähtien,\\
+Sillä olet matkalla kanssamme.\\
+Sillä kuolema on voitettu ikuisesti,\\
+Sillä annoit meille elämämme takaisin.
+}
+\\ \\
+Murra leipä edessämme\\
+Kun aurinko laskee:\\
+Nyt silmät näkevät sinut,\\
+Se olet sinä! Pysy kanssamme.
+\\ \\
+\textbf{\textcolor{crosscolor}{Kert.}} \textit{Kuten elävä tuli, se syttyy meissä ...}
+\\ \\
+Ja ikuisesti näytät itsesi\\
+Tuossa rakkauden eleessä:\\
+Kädet, jotka vielä murtavat\\
+Iankaikkisen leivän.
+\\ \\
+\textbf{\textcolor{crosscolor}{Kert.}} \textit{Kuten elävä tuli, se syttyy meissä ...}
+}
+
+
+
+
+
+% NEW PART
+\newcommand{\cantoFinaleFIN}{\mtr@cantoFinFIN}
+\newcommand\mtr@cantoFinFIN{%
+{\intestfont{Kaikki Kansat Ylistäkää}}
+\\ \\[1em]
+\textbf{\textcolor{crosscolor}{Kert.}}\textit{
+Jumalani, Herra, mikään ei ole kaltaisesi\\
+Nyt ja aina haluan ylistää\\
+Suurta rakkauttasi minua kohtaan.
+\\ \\
+Olet kallioni, annat minulle rauhaa ja lohtua\\
+Koko sydämelläni ja kaikilla voimillani\\
+Palvon aina sinua.
+\\ \\
+Kaikki kansat ylistäkää Herraa\\
+Kunniaa ja valtaa laulamme kuninkaalle\\
+Meret ja vuoret kumartavat sinulle\\
+Sinun nimeesi, oi Herra.
+\\ \\
+Ilosta laulan siitä, mitä teet\\
+Ikuisesti pysyn kanssasi Herra\\
+Ei ole lupausta eikä uskollisuutta, paitsi sinussa.
+}
+\\ \\
+\textbf{\textcolor{crosscolor}{Kert.}} \textit{Jumalani, Herra, mikään ei ole kaltaisesi ...}
+\\ \\
+Kaikki kansat ylistäkää Herraa\\
+Kunniaa ja valtaa laulamme kuninkaalle\\
+Meret ja vuoret kumartavat sinulle\\
+Sinun nimeesi, oi Herra.
+\\ \\
+Ilosta laulan siitä, mitä teet\\
+Ikuisesti pysyn kanssasi Herra\\
+Ei ole lupausta eikä uskollisuutta, paitsi sinussa\\
+Ei ole lupausta eikä uskollisuutta, paitsi sinussa\\
+Ei ole lupausta eikä uskollisuutta, paitsi sinussa.
+}
+
+
+
+\newcommand{\segnocroceFIN}{\mtr@segnocroceFIN}
+\newcommand{\mtr@segnocroceFIN}{%
+Isän ja pojan\mtr@endline
+ja Pyhän Hengen nimeen.
+\rispostatutti{Aamen.\\}
+
+\segnocrocecomment
+Herramme Jeesuksen Kristuksen armo,\mtr@endline
+ja Jumalan rakkaus\mtr@endline
+ja Pyhän Hengen osallisuus\mtr@endline
+olkoon kaikkien teidän kanssanne.\\
+\rispostatutti{Niin myös sinun henkesi kanssa.}}
+
+
+
+
+\newcommand\introduzioneFIN[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@introiFIN}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@introiiFIN}{%
+   \ifnumcomp{#1}{=}{3}{\mtr@introiiiFIN}{\errmessage{%
+   L'argomento del comando deve essere compreso fra 1 e 3}}}}
+}
+\newcommand\mtr@introiFIN{%
+\introcomment
+Veljet ja sisaret,\mtr@endline
+olemme iloiten kokoontuneet Herran taloon \mtr@endline
+päivänä, jolloin \sposa{} ja \sposo{}\mtr@endline
+aikovat muodostaa perheensä.\mtr@endline
+Tänä erityisen armon hetkenä\mtr@endline
+jaamme heidän ilonsa rakkauden,\mtr@endline
+ystävyyden ja rukousten kautta.\mtr@endline
+Kuunnelkaamme yhdessä heidän kanssaan\mtr@endline
+sana, jonka Jumala meille tänään osoittaa.\mtr@endline
+Yhdessä pyhän kirkon kanssa\mtr@endline
+me rukoilemme Isää Jumalaa,\mtr@endline
+Kristuksen, meidän Herramme, kautta,\mtr@endline
+jotta hän siunaa näitä lapsiaan,\mtr@endline
+jotka ovat juhlimassa avioliittoaan,\mtr@endline
+toivottaa heidät rakkaudessaan tervetulleiksi\mtr@endline
+ja vahvistaakseen heidät ykseyteen.
+
+Muistellaan nyt sitä kastetta,\mtr@endline
+jossa uudestisynnyimme uuteen elämään.\mtr@endline
+Tulemalla lapsiksi Pojassa,\mtr@endline
+tunnustakaamme kiitollisina saamamme lahja,\mtr@endline
+jotta pysymme uskollisina sille rakkaudelle, johon meidät on kutsuttu.\\
+}
+
+\newcommand{\membattFIN}{\mtr@baptmemFIN}
+\newcommand\mtr@baptmemFIN{%
+Isä,\mtr@endline
+poikasi Jeesuksen kasteessa Jordan virrassa\mtr@endline
+osoitit maailmalle puolison rakkauden kansaasi kohtaan.\\
+\rispostatutti{Kiitämme ja ylistämme sinua.\\}
+
+Jeesus Kristus,\mtr@endline
+avonaisesta kyljestäsi ristillä\mtr@endline
+loit kirkon,
+rakkaan morsiamesi.\\
+\rispostatutti{Kiitämme ja ylistämme sinua.\\}
+
+Pyhä Henki,\mtr@endline
+Isän ja Pojan voima,\mtr@endline
+anna kirkon häävaatetuksen loistaa\mtr@endline \sposa{}lle ja \sposo{}lle\mtr@endline\\
+\rispostatutti{Kiitämme ja ylistämme sinua.\\}
+
+\baptmemcommentii
+Kaikkivaltias Jumala,\mtr@endline
+, elämän alkuperä ja lähde,\mtr@endline
+joka olet meidät vedessä\mtr@endline
+uudistanut Henkesi voimalla,\mtr@endline
+herätä meissä kaikissa kasteen armo,\mtr@endline
+ja suo \sposa{} ja \sposo{}\mtr@endline vapaa sydän ja harras usko\mtr@endline
+jotta avoimin sydämin\mtr@endline
+he voivat ottaa vastaan avioliiton lahjan,\mtr@endline
+uuden tavan heidän pyhittämiseksensä.
+
+Kristuksen meidän Herramme tähden.\\
+\rispostatutti{Aamen.\\}
+
+\baptmemcommentiii%
+}
+
+
+
+\NewDocumentEnvironment{letturaFIN}{ o m m }
+ {\par\medskip
+  \IfNoValueTF{#1}{}{\noindent\intestfont{#1 lukukappale}\\*[.5ex]}
+  \noindent\nomelibrofont{#2}\hspace{1em}%
+  {\rifbibfont{(#3)\\}}\par\nobreak\smallskip}
+  {\chiusuraFIN{a}
+ }
+ 
+ \newcommand{\chiusuraFIN}[1]{%
+  \par\nobreak\smallskip
+  \ifx#1v%
+    Tämä on Herran sanaa.\rispostatutti{Ylistys sinulle, Kristus.}
+  \else
+    Tämä on Jumalan sanaa.\rispostatutti{Jumalalle kiitos.}
+  \fi}
+  
+
+\newcommand{\versettosalmoFIN}{}
+\newcommand{\rispostasalmoFIN}{\nobreak\smallskip\respsym\ {\respfont\versettosalmoFIN}}
+
+
+\newcommand{\alleluiaFIN}{\mtr@alleluiaFIN}
+\newcommand\mtr@alleluiaFIN{%
+\rispostatutti{Halleluja, Halleluja}
+Jumala on rakkaus; rakastakaamme toisiamme niin kuin hän rakasti meitä.\\
+\rispostatutti{Halleluja, Halleluja}
+}
+
+% ITALIAN ENVIRONMENT FOR THE VANGELO
+% \NewDocumentEnvironment{vangeloFIN}{o m m }
+%   {\par\medskip
+%   \IfNoValueTF{#1}{}{\noindent\intestfont{#1}\\*[.5ex]}
+%   \noindent\cross\nomelibrofont{Dal Vangelo secondo #2}\hspace{1em}%
+%   {\rifbibfont{(#3)}}\par\nobreak\smallskip}
+
+% NEW FINNISH ENVIRONMENT FOR THE VANGELO
+\NewDocumentEnvironment{vangeloFIN}{o m m }
+  {\par%\medskip removed
+   \IfNoValueTF{#1}{}{\noindent\intestfont{#1}\\*[.5ex]}
+   \noindent\cross\nomelibrofont{Pyhästä evankeliumista #2\\\smallskip mukaan}\hspace{1em}%
+   {\rifbibfont{(#3)\\%\\ added
+   }}\par\nobreak\smallskip}
+  {\chiusuraFIN{v}\postvangelocomment}
+  
+  
+  
+% NEW
+\newcommand{\omeliaFIN}{\mtr@omeliaIFIN}
+\newcommand\mtr@omeliaIFIN{% 
+Olette valinneet avioliittonne elämänsuunnitelmaksi Jeesuksen sanat: \quotes{Pysy rakkaudessani}. 
+Mitä tarkoittaa sana \quotes{pysyä}?
+\\ \\
+\textcolor{SAGEcolor}{\faDove} \, \quotes{Pysyä} tarkoittaa ennen kaikkea jo saadun rakkauden ymmärtämistä. Rakkaus ei ole todellisuus, joka on voitettava, vaan lahja, tarina, joka on tunnustettava ja jota on arvostettava. Rakkaus elää silloin muistoissa ja kiitollisuudessa.
+\\ \\
+\textcolor{SAGEcolor}{\faDove} \, \quotes{Pysyä} tarkoittaa myös \quotes{puolustamista}, eli taistelua, jottei mikään tai kukaan vie rakkautta pois. On muistettava, että olemme itse rakkauden pahimpia vihollisia, jos annamme hallitsemisen syrjäyttää lahjan, vihan syrjäyttää vuoropuhelun, kostamisen syrjäyttää anteeksiantamisen, sulkeutumisen syrjäyttää kuuntelemisen. 
+\\ \\
+\textcolor{SAGEcolor}{\faDove} \, \quotes{Pysyä} tarkoittaa myös \quotes{kasvattaa, kehittää}. Rakkaus laskee, jos se ei kasva. Jos sitä ei viljele ja harjoita, rakkaus kuolee. Tämän vuoksi Jeesus sanoo: \quotes{Pysykää minun rakkaudessani.} Pysymällä Jeesuksessa ja ylläpitämällä syvää yhteyttä hänen kanssaan, oppii rakastamaan hänen tavoin.
+\\ \\
+Jeesukselta opimme, että rakkaus \quotes{antaa elämää}. Hän, joka rakastaa, kysyy jatkuvasti itseltään: \quotes{Tekeekö rakkauteni toisesta vahvemman, vastuullisemman, vapaamman, tervetulleemman…?}
+\\ \\
+Jeesukselta opimme, että rakkaus on aina konkreettista sekä pitää nykyhetkeä ja tilaisuuksia rakastaa arvossa. Nykyhetki onkin ainut konkreettinen mahdollisuus rakastaa, ellemme halua rakkauden vähentyä nostalgiaan (menneeseen) tai haaveisiin ja harhoihin (tulevaisuuteen).
+}
+
+
+
+
+\newcommand\matrintroFIN[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@matrintroiFIN}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@matrintroiiFIN}{\errmessage{%
+  L'argomento del comando deve essere compreso fra 1 e 2}}}
+}
+
+\newcommand\mtr@matrintroiFIN{%
+\matrintrocomment
+Rakkaat\mtr@endline \sposa{} ja \sposo,\mtr@endline
+olette tulleet yhdessä Isän kotiin,\mtr@endline
+koska päätöksenne solmia avioliiton\mtr@endline
+saa sinettinsä ja siunauksensa,\mtr@endline
+papin ja yhteisön edessä.\mtr@endline
+VTe olette jo saaneet pyhityksenne kasteen kautta:\mtr@endline
+nyt Kristus siunaa teitä ja vahvistaa teitä \mtr@endline avioliiton sakramentilla,\mtr@endline
+jotta rakastatte toisianne\mtr@endline uskollisella ja ehtymättömällä rakkaudella\mtr@endline
+ja jotta otatte vastuun\mtr@endline avioliiton velvollisuuksista.
+
+Siksi pyydän teitä ilmaisemaan\mtr@endline
+aikomuksenne kirkon edessä.%
+}
+
+
+\newcommand\matrpreFIN[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@matrpreiFIN}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@matrpreiiFIN}{\errmessage{%
+  L'argomento del comando deve essere compreso fra 1 e 2}}}
+}
+
+\newcommand\mtr@matrpreiFIN{%
+\matrprecommenti
+\sposa{} ja \sposo,\mtr@endline
+oletteko tulleet solmimaan avioliiton\mtr@endline
+ilman rajoituksia,\mtr@endline täydellä vapaudella ja tietoisena\mtr@endline
+päätöksenne merkityksestä?\\
+\risposta{Kyllä.}
+
+Oletteko halukkaitta seuraamaan avioliiton tietä,\mtr@endline
+rakastamaan ja kunnioittamaan toisianne elämänne loppuun saakka?\\
+\risposta{Kyllä.}
+\ifmtr@figli
+
+Oletteko valmiita ottamaan rakkaudella vastaan \mtr@endline
+lapset, jotka Jumala tahtoo antaa teille\mtr@endline
+ja kasvattamaan heidät Kristuksen lain\mtr@endline ja hänen kirkkonsa mukaan?\\
+\risposta{Kyllä.\\}\fi%
+}
+
+
+
+\newcommand\consintroFIN[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@consintroiFIN}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@consintroiiFIN}{\errmessage{%
+  L'argomento del comando deve essere compreso fra 1 e 2}}}
+}
+
+\newcommand\mtr@consintroiFIN{%
+\consintrocommenti
+Jos aikeenne on solmia\mtr@endline pyhä avioliitto,\mtr@endline
+liittäkää oikeat kätenne\mtr@endline
+ja julistakaa suostumuksenne Jumalan ja hänen \mtr@endline
+kirkkonsa edessä.
+
+\consintrocommentii
+}
+
+
+
+\newcommand\promesseFIN[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@matriFIN}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@matriiFIN}{%
+   \ifnumcomp{#1}{=}{3}{\mtr@matriiiFIN}{\errmessage{%
+   L'argomento del comando deve essere compreso fra 1 e 3}}}}
+}
+
+\newcommand\mtr@matriFIN{%
+\ifmtr@comment\commentindent{%
+\commentfont Lo sposo si rivolge alla sposa con queste parole:\par}\fi
+Minä \sposo,\mtr@endline otan sinut, \sposa,\mtr@endline nyt aviovaimokseni.\mtr@endline
+Kristuksen armon kautta\mtr@endline
+lupaan olla sinulle aina uskollinen,\mtr@endline
+niin ilossa kuin kärsimyksessä,\mtr@endline
+niin terveydessä kuin sairaudessa,\mtr@endline
+ja rakastaa ja kunnioittaa sinua\mtr@endline
+joka päivä aina elämäni loppuun saakka.\\
+
+\mtrskip
+\ifmtr@comment\commentindent{\commentfont{%
+La sposa si rivolge allo sposo con queste parole:}\par}\fi
+Minä \sposa,\mtr@endline otan sinut, \sposo,\mtr@endline nyt aviomiehekseni.\mtr@endline
+Kristuksen armon kautta\mtr@endline
+lupaan olla sinulle aina uskollinen,\mtr@endline
+niin ilossa kuin kärsimyksessä,\mtr@endline
+niin terveydessä kuin sairaudessa,\mtr@endline
+ja rakastaa ja kunnioittaa sinua\mtr@endline
+joka päivä aina elämäni loppuun saakka.%
+}
+
+\newcommand\preghpostFIN[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@accconsiFIN}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@accconsiiFIN}{\errmessage{%
+  L'argomento del comando deve essere compreso fra 1 e 2}}}
+}
+
+\newcommand{\mtr@accconsiFIN}{%
+\accconscomment
+Vahvistakoot kaikkivaltias ja armollinen Herra \mtr@endline
+suostumuksenne\mtr@endline
+jonka olette osoittaneet kirkon edessä\mtr@endline
+ja täyttäköön hän teidät siunauksellaan.\mtr@endline
+Minkä Jumala on yhdistänyt, sitä älköön ihminen erottako.\\
+\rispostatutti{Aamen.\\}
+}
+
+\newcommand\benedizioneanelliFIN[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@benanelliFIN}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@benanelliiFIN}{%
+   \ifnumcomp{#1}{=}{3}{\mtr@benanelliiiFIN}{%
+    \ifnumcomp{#1}{=}{4}{\mtr@benanelliv}{\errmessage{%
+    L'argomento del comando deve essere compreso fra 1 e 4}}}}}
+}
+
+
+\newcommand\mtr@benanelliiFIN{%
+\benanellicommenti
+Herra, siunaa \cross nämä vihkisormukset:\mtr@endline
+aviopari, joka niitä kantaa\mtr@endline
+suojaa uskollisuuttaan,\mtr@endline
+pysyy tahdossasi ja rauhassasi\mtr@endline
+sekä elää aina keskinäisessä rakkaudessa.
+
+Kristuksen meidän Herramme tähden.\\
+\rispostatutti{Aamen.\\}%
+
+\benanellicommentii
+}
+
+
+\newcommand{\consegnanelloFIN}{\mtr@consanellFIN}
+\newcommand\mtr@consanellFIN{%
+\consanellcommento
+\sposa, ota tämä sormus,\mtr@endline
+merkiksi rakkaudestani ja uskollisuudestani.\mtr@endline
+Isän ja Pojan\mtr@endline
+ja Pyhän Hengen nimeen.\\
+\mtrskip
+
+\consanellcommenta
+\sposo, ota tämä sormus,\mtr@endline
+merkiksi rakkaudestani ja uskollisuudestani.\mtr@endline
+Isän ja Pojan\mtr@endline
+ja Pyhän Hengen nimeen.%
+}
+
+
+\newcommand{\introfedeliFIN}{\mtr@fedelintroFIN}
+\newcommand{\preghierefedeliFIN}{\mtr@fedelistandardFIN}
+\newcommand{\rispostafedeliFIN}[1][Kuuntele meitä, oi Herra.\\]{#1}
+\newcommand\mtr@fedelintroFIN{%
+Veljet ja siskot,
+tietoisina armon ja rakkauden ainutlaatuisesta lahjasta, jonka kautta Jumala halusi kuvantaa täydellisen ja pyhittää \sposa{}n ja \sposo n rakkauden, pyydämme Herra, että pyhimysten esimerkin ja esirukousten tukemina he varjelevat uskollisesti avioliittonsa sidosta.
+
+Rukoilkaamme yhdessä sanoen: \rispostafedeliFIN
+\rispostatutti{\rispostafedeliFIN}
+\medskip
+\nobreak
+}
+
+\newcommand{\mtr@fedelistandardFIN}{%
+\sposa{}n ja \sposo n puolesta: Herra anna heille janon lahja. Jano merkitykselle, jano rakkaudelle, jano kauneudelle ja jano Sinulle, ainoalle ja korkeimmalle Hyvälle; tee heistä niin janoisia, että he voivat joka päivä nostaa vettä sammumattomasta rukouksen lähteestä, läheisyyden ja toivon lähteestä. Rukoilkaamme.
+\\
+\rispostatutti{\rispostafedeliFIN}
+
+Tiedämme, että avioliitto on lahja, eikä itsestäänselvyys.
+Herra auta \sposa{}a ja \sposo a heidän suhteessaan naisena ja miehenä, auta heitä kunnioittamaan toisiaan ja ymmärtämään toistensa näkökulmaa, varmista, että heidän välillään on hellyyttä ja rehellisyyttä, ymmärrystä ja kärsivällisyyttä unohtamatta ripaus terveellistä huumoria. Ilo auttaa aina, joten olkaa iloisia ja ilon kantajia. Rukoilkaamme.\\
+\rispostatutti{\rispostafedeliFIN}
+
+Rukoilkaamme ja kiittäkäämme \sposa{}n ja \sposo n perheitä, jotta rakkaus, joka johti teidät ensin aviomieheksi ja vaimoksi, sitten isäksi ja äidiksi, olisi jatkossakin esimerkkinä ja virikkeenä tänään syntyvälle uudelle perheelle. Olkoon rakkaus, jolla he ruokkivat ja kasvattivat teidät, syy valita toisenne uudelleen joka päivä.
+Nautiskelkaa yhdessäolemisen kauneudesta tämän päivän rakkauden vuoksi, eikä eilisen rakkauden, heidän esimerkkiä ja Jumalan apua seuraten. Rukoilkaamme.\\
+\rispostatutti{\rispostafedeliFIN}
+
+Kirkon puolesta: jotta Hän luottamuksella, rohkeudella ja pitkäjänteisyydellä välittäisi kaikille ainoan pelastavan totuuden, erityisesti \sposa{}lle ja \sposo lle, jotta he voisivat näin aloittaa uuden matkansa Kristuksessa. Rukoilkaamme.\\
+\rispostatutti{\rispostafedeliFIN}
+}
+
+
+\newcommand{\introlitanieFIN}{\mtr@introlitanieFIN}
+\newcommand{\mtr@introlitanieFIN}{%
+\introlitaniecomment
+Nyt yhdessä taivaan kirkon kanssa, anokaamme pyhien esirukousta.}
+
+
+\newcommand{\litasposoFIN}{Pyhä \NSposo, & rukoile puolestamme\\}
+\newcommand{\litasposaFIN}{Pyhä \NSposa, & rukoile puolestamme\\}
+
+\newcommand{\litanieFIN}{\mtr@litanieeeFIN}
+\newcommand\mtr@litanieeeFIN{%
+\begin{longtable}{@{}l>{\respfont}l}
+Pyhä Maria, Jumalan äiti, & rukoile puolestamme\\
+Pyhä Maria, kirkon äiti, & rukoile puolestamme\\
+Pyhä Maria, perheen kuningatar, & rukoile puolestamme\\
+Pyhä Joosef, Marian mies, & rukoile puolestamme\\
+Pyhät Jumalan enkelit, & rukoilkaa puolestamme\\
+Pyhät Joakim ja Anna, & rukoilkaa puolestamme\\
+Pyhät Sakaria ja Elisabet, & rukoilkaa puolestamme\\
+Pyhä Johannes Kastaja, & rukoile puolestamme\\
+Pyhät Pietari ja Paavali, & rukoilkaa puolestamme\\
+Pyhät Apostolit ja Evankelistat, & rukoilkaa puolestamme\\
+Pyhät Kristuksen marttyyrit, & rukoilkaa puolestamme\\
+Pyhät Aquila ja Priscilla, & rukoilkaa puolestamme\\
+Pyhät Marius ja Martta, & rukoilkaa puolestamme\\
+Pyhä Monica, & rukoile puolestamme\\
+Pyhä Paulinus, & rukoile puolestamme\\
+Pyhä Birgitta, & rukoile puolestamme\\
+Pyhä Rita, & rukoile puolestamme\\
+Pyhä Francesca Roomalainen, & rukoile puolestamme\\
+Pyhä Thomas More, & rukoile puolestamme\\
+Pyhä Giovanna Beretta Molla, & rukoile puolestamme\\
+% Pyhä Vigilio, & rukoile puolestamme\\
+% Pyhä Francesco d'Assisi, & rukoile puolestamme\\
+% Pyhä Giovanni Bosco, & rukoile puolestamme\\
+% Pyhä Bruno, & rukoile puolestamme\\
+% Pyhä Lorenzo, & rukoile puolestamme\\
+% Pyhä Alberto, & rukoile puolestamme\\
+% Pyhä Rosa, & rukoile puolestamme\\
+\personallitania
+\litasposoFIN
+\litasposaFIN
+\litachiesa
+Kaikki Jumalan Pyhät, & rukoilkaa puolestamme\\ \\
+\end{longtable}
+
+\postlitaniecomment
+
+Laske, Herra, Henkesi rakkaus \sposa{}n ja \sposo{}on
+päälle, jotta heistä tulee yksi sydän ja yksi sielu: mikään ei erota tätä avioparia, jonka olet yhdistänyt, ja siunauksellasi täytettyinä, mikään ei heitä koettele.
+
+Kristuksen meidän Herramme tähden.\\
+\rispostatutti{Aamen.\\}%
+}
+
+
+
+
+
+
+\newcommand{\prefazioFIN}{\mtr@presantoFIN}
+\newcommand\mtr@presantoFIN{%
+Herra olkoon teidän kanssanne.
+\rispostatutti{Niin myös sinun henkesi kanssa.\\}
+
+Ylentäkää sydämenne.
+\rispostatutti{Ylennämme sen Herran puoleen.\\}
+
+Kiittäkäämme Herraa, Jumalaamme,
+\rispostatutti{Niin on oikein ja arvollista.\\ \\}
+}
+
+
+
+\newcommand{\santosantoFIN}{\mtr@santoFIN}
+\newcommand\mtr@santoFIN{%
+Pyhä, pyhä, pyhä Herra Jumala kaikkivaltias. 
+Täydet ovat taivaat ja maa sinun kunniaasi.\\
+Hoosianna korkeuksissa.\\
+Siunattu olkoon hän, joka tulee Herran nimeen.\\ Hoosianna korkeuksissa.}
+
+
+
+
+\newcommand{\misterofedeFIN}[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\rispostatutti{\mtr@mistfedeiFIN}}{%
+  \ifnumcomp{#1}{=}{2}{\rispostatutti{\mtr@mistfedeiiFIN}}{%
+   \ifnumcomp{#1}{=}{3}{\rispostatutti{\mtr@mistfedeiiiFIN}}{\errmessage{%
+   L'argomento del comando deve essere compreso fra 1 e 3}}}}
+}
+
+\newcommand\mtr@mistfedeiFIN{%
+Me julistamme sinun kuolemaasi, Herra,\\
+ja vietämme sinun ylösnousemustasi siihen saakka,
+kun kunniassa tulet.\\
+}
+
+
+
+
+
+
+
+% NEW
+\newcommand{\pregheucarIIFIN}{\mtr@pregheucarrrIIFIN}
+\newcommand\mtr@pregheucarrrIIFIN{% 
+% https://liturgico.chiesacattolica.it/messale-romanoterza-edizione-italiana/
+% PAG. 506 / 1278
+% Il Signore sia con voi.
+% R/. E con il tuo spirito.
+% V/. In alto i nostri cuori.
+% R/. Sono rivolti al Signore.
+% V/. Rendiamo grazie al Signore nostro Dio.
+% R/. È cosa buona e giusta.
+% È veramente cosa buona e giusta,
+% nostro dovere e fonte di salvezza, % *
+% rendere grazie sempre e in ogni luogo % *
+% a te, Padre santo, % +
+% per Gesù Cristo, tuo amatissimo Figlio. % **
+% Egli è la tua parola vivente: % *
+% per mezzo di lui hai creato tutte le cose, %
+% lo hai mandato a noi salvatore e redentore, % *
+% fatto uomo per opera dello Spirito Santo % +
+% e nato dalla Vergine Maria. % **
+% Per compiere la tua volontà %
+% e acquistarti un popolo santo % *
+% egli, nell’ora della passione, %
+% stese le braccia sulla croce, % *
+% morendo distrusse la morte % +
+% e proclamò la risurrezione. % **
+% Per questo mistero di salvezza, % *
+% uniti agli angeli e ai santi, % *
+% cantiamo a una sola voce % +
+% la tua gloria: % **
+%
+% From the original matrita
+% https://github.com/franen/matrita/blob/master/matrita.dtx
+% from line 1768 to line 1781
+On totisesti oikein ja arvollista,
+meidän velvollisuutemme ja pelastuksemme, kiittää aina ja kaikkialla sinua, Herra, Pyhä Isä, iankaikkinen ja kaikkivaltias Jumala.
+\\
+Olet antanut avioliiton laiksi rakkauden ja rauhan purkamattoman siteen, jotta puolisoiden kunniallinen ja antoisa liitto kasvattaa lastesi määrää.
+\\
+Ihailtavasti olet luonut ihmisperheen tulevan iloiseksi uuden olennon syntymästä, ja heidän uudestisyntymisensä Kristuksessa rakentaa kirkkoasi.
+\\
+Tätä pelastuksen salaisuutta varten laulakaamme yhdessä enkelien ja pyhäin kanssa ylistys virtesi:
+\\ \\
+{\bfseries\santosantoFIN}
+\\ \\
+% PAG. 507 / 1278
+Totisesti olet pyhä, Isä Jumala, kaiken pyhyyden lähde.
+\\ \\
+Sen vuoksi pyydämme sinua: pyhitä Hengelläsi nämä lahjat, että niistä tulisi meille Herramme Jeesuksen Kristuksen ruumis \cross ja veri. 
+%
+Päivänä, jona hänet kavallettiin ja hän vapaaehtoisesti lähti kärsimisen tielle, hän otti leivän, kiitti, mursi sen ja antoi opetuslapsilleen sanoen:
+%
+\\ \\
+{\consacrazfont 
+Ottakaa ja syökää tästä kaikki:\\
+tämä on minun ruumiini,\\
+joka teidän edestänne annetaan.\\}
+\\
+Samoin hän aterian jälkeen otti maljan, kiitti ja antoi sen opetuslapsilleen sanoen:
+%
+\\ \\ 
+{\consacrazfont 
+Ottakaa ja juokaa tästä kaikki:\\
+tämä on minun vereni malja,\\
+uuden ja ikuisen liiton veri,\\
+joka teidän ja monien edestä vuodatetaan\\
+syntien anteeksi antamiseksi.\\
+Tehkää tämä minun muistokseni.\\}
+%
+\\ \\
+Tämä on uskon salaisuus.
+\\
+\misterofedeFIN
+Muistaen Poikasi kuolemaa ja ylösnousemusta me kannamme sinun eteesi, Isä, elämän leivän ja pelastuksen maljan. Me kiitämme sinua, että olet kutsunut meidät seisomaan kasvojesi edessä ja palvelemaan sinua. Nöyrästi rukoilemme sinua: lahjoita meille osallisuus Kristuksen ruumiiseen ja vereen ja kokoa meidät yhteen Pyhässä Hengessä. Muista kirkkoasi, joka on levinnyt yli maan piirin,
+% %%%%%%% Domenica
+% e qui convocata
+% nel giorno in cui Cristo ha vinto la morte
+% e ci ha resi partecipi della sua vita immortale:
+% %%%%%%% Domenica
+ja tee se täydelliseksi rakkaudessa yhdessä paavimme  \nomepapa n, % ±.,
+piispamme \nomevescovo n, % ±.
+ja kirkon koko papiston kanssa. % †
+% %%%%%%% Per il Matrimonio
+Muista myös \sposa{}a ja \sposo a,
+jotka halusit johdattaa hääpäivään: sinun armosi kautta he elävät keskinäisessä rakkaudessa ja rauhassa.
+% %%%%%%% Per il Matrimonio
+Muista myös niitä läheisiämme, jotka ovat nukkuneet pois ylösnousemuksen toivossa, ja kaikkia, jotka sinun laupeutesi saattamina ovat lähteneet tästä elämästä. Päästä heidät valkeuteen kasvojesi eteen. Armahda meitä kaikkia, että pääsisimme osallisiksi iankaikkisesta elämästä autuaan Jumalan äidin, Neitsyt Marian, pyhän Joosefin, hänen miehensä, apostolien, 
+% [san ±.: santo del giorno o patrono]
+% Sant’Emilio 
+ja kaikkien pyhäin kanssa, jotka aikojen alusta ovat olleet sinulle otolliset, kiittääksemme ja ylistääksemme sinua Poikasi, Jeesuksen Kristuksen, kautta.
+\\
+Hänen kauttaan, hänen kanssaan ja hänessä sinulle, Jumalalle, kaikkivaltiaalle Isälle, Pyhän Hengen yhteydessä kaikki kunnia ja kirkkaus iankaikkisesta iankaikkiseen.
+\\
+\rispostatutti{Aamen.\\}
+}
+
+
+
+% NEW PART
+\newcommand{\riticomunionePREbenedizionenuzialeFIN}{\mtr@riticomunionePREbnFIN}
+\newcommand\mtr@riticomunionePREbnFIN{%
+Kuuliaisina jumalalliselle kehotukselle ja opetukselle rohkenemme sanoa:
+\\ \\
+{\bfseries Isä meidän, joka olet taivaissa. Pyhitetty olkoon sinun nimesi. Tulkoon sinun valtakuntasi. Tapahtukoon sinun tahtosi myös maan päällä niin kuin taivaassa. Anna meille tänä päivänä jokapäiväinen leipämme. Ja anna meille anteeksi velkamme, niin kuin mekin annamme anteeksi velallisillemme. Äläkä saata meitä kiusaukseen, vaan päästä meidät pahasta.}
+}
+
+
+\newcommand{\riticomunionePOSTbenedizionenuzialeFIN}{\mtr@riticomunionePOSTbnFIN}
+\newcommand\mtr@riticomunionePOSTbnFIN{%
+Herra Jeesus Kristus, sinä sanoit apostoleillesi: \quotes{rauhan minä jätän teille, minun rauhani – sen minä annan teille}. Sen tähden me pyydämme: älä katso syntejämme vaan kirkkosi uskoa: kokoa ja varjele sitä rauhassa ja ykseydessä tahtosi mukaan, sinä, joka elät ja hallitset iankaikkisesta iankaikkiseen.\\
+\rispostatutti{Aamen.\\}
+Herran rauha olkoon aina teidän kanssanne.\\
+\rispostatutti{Niin myös sinun henkesi kanssa.\\}
+\rispostatutti{Jumalan Karitsa, joka kannat maailman synnin, armahda meitä. Jumalan Karitsa, joka kannat maailman synnin, armahda meitä. Jumalan Karitsa, joka kannat maailman synnin, anna meille rauha.\\}
+Tässä on Jumalan Karitsa, tässä hän, joka ottaa pois maailman synnit. Siunattuja ovat vieraat Karitsan aterialla.\\
+\rispostatutti{Herra, en ole sen arvoinen, että tulet luokseni. Lausu vain sana, niin minä paranen.\\}
+}
+
+
+
+
+
+\newcommand\benedizionesposiFIN[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@benedizsposiFIN}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@benedizsposiiFIN}{%
+   \ifnumcomp{#1}{=}{3}{\mtr@benedizsposiiiFIN}{%
+    \ifnumcomp{#1}{=}{4}{\mtr@benedizsposivFIN}{\errmessage{%
+    L'argomento del comando deve essere compreso fra 1 e 4}}}}}
+}
+
+\newcommand\mtr@benedizsposiiFIN{%
+\benedizsposcommenti
+Rukoilkaamme Herraa tämän avioparin puolesta, joka avioelämän alussa lähestyy alttaria, jotta he yhdessä Kristuksen ruumiin ja veren kanssa vahvistuvat keskinäisessä rakkaudessa.
+
+\benedizsposcommentii
+Pyhä Isä, sinä olet luonut ihmisen omaksi kuvaksesi: loit miehen ja naisen, sillä mies ja nainen, ruumiiltaan ja hengeltään yhdistyneinä, osallistuvat luomistyöhösi.
+
+Oi Jumala, paljastaaksesi rakkautesi suunnitelman, aviopuolisoiden elämien yhteen liittyessä halusit varjostaa kansasi kanssa tekemää liittoumaa, sillä sinuun uskovien avioliitossa, joka todentuu täysin sakramentissa, Kristuksen ja kirkon avioliiton mysteeri voi ilmetä
+
+Oi Jumala, laske kätesi \sposa{}n ja \sposo{}n
+päälle ja vuodata Pyhän Hengen voima heidän sydämiinsä. Suo, oi Herra, että pyhittämässäsi liitossa he jakavat rakkautesi lahjat ja tulemalla merkiksi läsnäolostasi toisilleen, he voivat olla yksi sydän ja yksi sielu. Anna heille, Herra, voimaa kannatella kotia, jota he rakentavat, sekä kestää sen tuomia koettelemuksia.
+\ifmtr@figli Evankeliumikoulu valmistaa heidän lapsiaan tulemaan kirkkosi jäseniksi.\fi
+
+Anna tälle morsiamelle, \sposa{}lle, siunaus siunauksen jälkeen: jotta hän vaimona \ifmtr@figli\ ja äitinä\fi,
+levittää iloa kotiin sekä valaisee anteliaisuudellaan ja lempeydellään. Katso isällisellä hyväntahtoisuudella \sposo a, hänen miestään: jotta hän siunauksesi vahvistamana täyttäisi uskollisesti tehtävänsä aviomiehenä\ifmtr@figli\ ja isänä\fi.\
+
+Pyhä Isä, salli näiden lastesi, edessäsi aviopuolisoina yhdistyneinä, välittää sanomaa pöydässäsi, osallistuakseen yhdessä ilolla taivaan juhlaan.
+
+Kristuksen meidän Herramme tähden.\\
+\rispostatutti{Aamen.\\}%
+}
+
+
+\newcommand\benedizionefinaleFIN[1][1]{%
+ \ifnumcomp{#1}{=}{1}{\mtr@prebenedizfinFIN\mtr@bendizfiniFIN}{%
+  \ifnumcomp{#1}{=}{2}{\mtr@prebenedizfinFIN\mtr@bendizfiniiFIN}{%
+   \ifnumcomp{#1}{=}{3}{\mtr@prebenedizfinFIN\mtr@bendizfiniiiFIN}{\errmessage{%
+   L'argomento del comando deve essere compreso fra 1 e 3}}}}
+}
+
+
+% benesole
+\newcommand{\mtr@prebenedizfinFIN}{%
+Herra olkoon teidän kanssanne. \rispostatutti{Niin myös sinun henkesi kanssa.}}
+
+\newcommand\mtr@bendizfiniFIN{%
+\benedizfincomment
+Jumala, iankaikkinen Isä,\mtr@endline
+pitää teidät yhtenäisinä keskinäisessä rakkaudessa;\mtr@endline
+olkoon Kristuksen rauha aina teissä\mtr@endline
+ja pysyköön aina kotonanne.\\
+\rispostatutti{Aamen.}
+
+Olkoon teidän lapsenne siunattuja,\mtr@endline
+ja olkoot teillä ystävien lohtu ja todellinen rauha kaikkien kanssa.\\
+\rispostatutti{Aamen.}
+
+Olkaa Jumalan rakkauden todistajia maailmassa\mtr@endline
+jotta köyhät ja kärsivät,\mtr@endline
+jotka ovat kokeneet rakkautenne,\mtr@endline
+toivottavat teidät jonain päivänä kiitollisena tervetulleeksi Isän taloon.\\
+\rispostatutti{Aamen.}
+
+Siunatkoon kaikkia teitä,\mtr@endline
+tähän morsiusmessuun osallistuneita,\mtr@endline
+kaikkivaltias Jumala,\mtr@endline
+Isän ja Pojan \cross ja Pyhän Hengen nimeen.\\\bigskip
+\rispostatutti{Aamen.}%
+}
+
+
+
+\newcommand{\congedoFIN}{\mtr@congedoooFIN}
+\newcommand\mtr@congedoooFIN{%
+\congedocomment
+Toimikaa juhlimanne elämän ja rakkauden lahjan todistajina\mtr@endline niin kirkossa kuin maailmassa.\\
+Menkää rauhassa.\\
+
+\rispostatutti{Kiitos Jumalalle.\\}%
+}
